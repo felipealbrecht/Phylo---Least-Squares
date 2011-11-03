@@ -14,8 +14,8 @@ PIH_LIB_O=../../Pih-Lib/src/pih_lib.do
 
 INCLUDE = -I../include -I$(PIH_LIB_INCLUDE)
 
-CFLAGS = -Wall -Wextra $(INCLUDE)
-DEBUGFLAGS = -Wall -Wextra -g -O0 $(INCLUDE)
+CFLAGS = -Wall -Wextra $(INCLUDE) -D_LS_RUN_
+DEBUGFLAGS = -Wall -Wextra -g -O0 $(INCLUDE) -D_LS_RUN_
 LIBS = -lm
 
 NAME = -o
@@ -37,6 +37,9 @@ all: $(STANDALONEOBJS)
 
 debug: $(DEBUGOBJS)
 	$(CC) $(CFLAGS) $(NAME) $(EXECNAMEDEBUG) $(DEBUGOBJS) $(LIBS)
+
+readdist:
+	gcc readdist.c -D_DEBUG_READDIST_ -I../include -I../../Pih-Lib/include/ ../../Pih-Lib/src/pih_lib.c -g -o readdist
 
 clean: 
 	rm -rf $(STANDALONEOBJS) $(DEBUGOBJS)

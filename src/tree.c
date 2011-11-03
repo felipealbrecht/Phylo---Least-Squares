@@ -1309,26 +1309,28 @@ list_t trees_construct(values_table_t values_table, list_t trees)
 	return trees;
 }
 
-
+#ifdef _LS_RUN_
 int main() 
 {
-	//values_table_t values_table = read_dist_file_from_phylip("../data/really_simple_matrix");
+        values_table_t values_table = read_dist_file_from_phylip("../data/really_simple_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/tcc_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/simple_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/not_so_simple_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/more_complex_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/49_taxons");
-	values_table_t values_table = read_dist_file_from_paup("../data/domains.NX");
+	//values_table_t values_table = read_dist_file_from_paup("../data/domains.NX");
+	
+        values_table_print(stderr, values_table);
 
 	//values_table_print(stdout, values_table);
 	list_t triples = create_triples(values_table);
-	fprintf(stderr, "ha %d trios\n", triples->size);
+	fprintf(stderr, "ha %ld trios\n", triples->size);
 
 	list_t continuing_triples = filter_triples(triples, 1);
 
 	list_t trees = trees_create(values_table, continuing_triples);
 	
-	fprintf(stderr, "ha %d trios\n", triples->size);
+	fprintf(stderr, "ha %ld trios\n", triples->size);
 	list_destroy_all(&triples, triple_destroy);
 	list_destroy(&continuing_triples);
 
@@ -1357,4 +1359,5 @@ int main()
 	values_table_destroy(&values_table);
 	return 0;
 }
+#endif
 

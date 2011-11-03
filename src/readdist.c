@@ -63,7 +63,7 @@ Example triagonal:
 int main(int argc, char **argv)
 {
 
-	values_table_t vt = read_dist_file_from_paup("domains.NX");
+	values_table_t vt = read_dist_file_from_paup("../data/domains.NX");
 	FILE *output = stdout;
 
 	if (argc == 2) {
@@ -71,6 +71,8 @@ int main(int argc, char **argv)
 	}
 
 	values_table_print(output, vt);
+
+        values_table_destroy(&vt);
 
 	return 0;
 }
@@ -345,9 +347,6 @@ double values_table_get_value(values_table_t values_table, unsigned int pos_1, u
 
 	vp = hash_table_get(values, pos_smaller_to_string);
 
-	free(pos_bigger_to_string);
-	free(pos_smaller_to_string);
-
 	return vp->value;
 }
 
@@ -610,7 +609,7 @@ void values_table_print(FILE *output, values_table_t values_table)
 	unsigned int qtd_taxons = values_table_get_size(values_table);
 	char *name = NULL;
 
-	fprintf(output, " %d\n", qtd_taxons);
+	fprintf(output, "Taxons: %d\n", qtd_taxons);
 
 	for (i = 0; i < qtd_taxons; i++) {
 		name = values_table_get_name(values_table, i);
