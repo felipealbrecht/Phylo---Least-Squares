@@ -183,7 +183,6 @@ DISTMAT
 	for (i = 0; i < ntax; ++i) {
 		distmat->dist[i] = (double *) calloc(ntax,       sizeof(double));
 		distmat->flag[i] = (int *)    calloc(ntax,       sizeof(int));
-		distmat->taxa[i] = (char *)   malloc(name_size * sizeof(char));
 	}
 
 	distmat->ntax = ntax;
@@ -199,7 +198,6 @@ DISTMATdestroy(DISTMAT *distmat)
 	for (i = 0; i < distmat->ntax; ++i) {
 		free(distmat->dist[i]);
 		free(distmat->flag[i]);
-		free(distmat->taxa[i]);
 	}
 
 	free(distmat->taxa);
@@ -424,10 +422,18 @@ transform_scores(DISTMAT *distmat, int transform, double evalue, double bonferro
 void
 print_NX_distmat(DISTMAT *distmat, char *NXfile_name)
 {
-	int            i, j;
 	FILE          *NXfile_ptr = NULL;
 
-	NXfile_ptr  = fopen(NXfile_name, "w");
+        NXfile_ptr  = fopen(NXfile_name, "w");
+        print_NX_distmat_file(distmat, NXfile_ptr);
+	fclose(NXfile_ptr);
+}
+
+
+void
+print_NX_distmat_file(DISTMAT *distmat, FILE* NXfile_ptr)
+{
+	int            i, j;
 
 	fprintf(NXfile_ptr, "#NEXUS\n\n");
 	fprintf(NXfile_ptr, "begin taxa;\n");
@@ -467,10 +473,6 @@ print_NX_distmat(DISTMAT *distmat, char *NXfile_name)
 	fprintf(NXfile_ptr, "]\n");
 
 	fprintf(NXfile_ptr, ";\nend;\n\n");
-	fprintf(stdout, "\n\nNEXUS file \'%s\' written out. \n", NXfile_name);
-	/*fprintf(NXfile_ptr, "begin paup;\n    dset distance=user;\n    upgma;\nend;\n\n");
-	*/
-	fclose(NXfile_ptr);
 }
 
 #ifdef _SCOP2DIST_

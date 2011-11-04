@@ -232,11 +232,13 @@ int main()
 	hash_table_add(result_table, rp_99->sequence_1, this_table);
 
 
-	convert_to_distmat(result_table);
+	DISTMAT* distmat = convert_to_distmat(result_table);
 
         hash_table_destroy_all(&result_table, result_pair_hash_table_destroy);
 
-	fprintf(stderr, "FIM!\n");
+        print_NX_distmat_file(distmat, stdout);
+
+        DISTMATdestroy(distmat);
 
 	return 0;
 }
@@ -265,8 +267,6 @@ int result_pair_destroy(void *data)
 	if (*rp == NULL) {
 		return 0;
 	}
-
-	//fprintf(stderr, "destruindo RP (%p) %s %s \n", *rp, (*rp)->sequence_1, (*rp)->sequence_2);
 	free(*rp);
 	*rp = NULL;
 
@@ -361,17 +361,20 @@ DISTMAT *convert_to_distmat(hash_table_t result_table)
 
 			distmat->dist[pos][pos_inner] = distmat->dist[pos_inner][pos] = rp->value;
 		}
-
+                list_iterator_destroy(&table_seq_iterator);
 	}
 
-	iterator_t table_position_iterator = hash_table_iterator(table_position);
+        list_iterator_destroy(&table_result_iterator);
 
+	iterator_t table_position_iterator = hash_table_iterator(table_position);
 	while (table_position_iterator->has_next(table_position_iterator)) {
 		cell = table_position_iterator->next(table_position_iterator);
 
-		distmat->taxa[((int) cell->data) - 1] = cell->id;
+		distmat->taxa[((int) cell->data) - 1] = strdup(cell->id);
 	}
+        list_iterator_destroy(&table_position_iterator);
 
+        hash_table_destroy(&table_position);
 
 	return distmat;
 }

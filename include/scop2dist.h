@@ -62,4 +62,7 @@ transform_scores(DISTMAT *distmat, int transform, double evalue, double bonferro
 void
 print_NX_distmat(DISTMAT *distmat, char *NXfile_name);
 
+void
+print_NX_distmat_file(DISTMAT *distmat, FILE* NXfile_ptr);
+
 #endif
