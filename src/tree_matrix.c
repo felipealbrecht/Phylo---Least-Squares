@@ -38,24 +38,17 @@ double** tree_create_matrix(tree_t tree, size_t *lines, size_t *columns)
 	size_t c = combination(taxons->size, 2);
 	double **matrix = (double **) malloc(sizeof(double) * c);
 
-        #ifdef _DEBUG_
-	char *path_name;
-        #endif
-
 	CHECK(matrix);
 	for (i = 0; i < c; i++) {
 		matrix[i] = (double *) malloc(sizeof(double) * tree->internal_nodes->keys->size);
 		CHECK(matrix[i]);
 	}
 
-//	fprintf(stderr, "construindo matriz para a arvore %s\n", tree->id);
-
-	i = 0;
 	it = list_iterator(taxons);
+	i = 0;
 	while (it->has_next(it)) {
 		cell = (cell_t) it->next(it);
 		leaf_from = (taxon_node_t) cell->data;
-
 		it_2 = list_iterator_continues(it);
 		while (it_2->has_next(it_2)) {
 			cell_2 = (cell_t) it_2->next(it_2);
@@ -63,15 +56,10 @@ double** tree_create_matrix(tree_t tree, size_t *lines, size_t *columns)
 
 			path = leaf_walk_to(leaf_from, leaf_to);
                         
-                        #ifdef _DEBUG_
-			path_name = create_id(leaf_from->taxon, leaf_to->taxon, "_2_");
-                        #endif
-
 			j = 0;
 			in_iterator = list_iterator(tree->internal_nodes->keys);
 			while (in_iterator->has_next(in_iterator)) {
 				in_cell = (cell_t) in_iterator->next(in_iterator);
-
 				if (list_search(path, in_cell->id) == NULL) {
 					matrix[i][j] = 0.0;
 				} else {
@@ -84,7 +72,11 @@ double** tree_create_matrix(tree_t tree, size_t *lines, size_t *columns)
 			list_iterator_destroy(&in_iterator);
 			i++;
 		}
+                list_iterator_destroy(&it_2);
 	}
+        list_iterator_destroy(&it);
+
+        free(taxons);
 
 	*lines = c;
 	*columns = tree->internal_nodes->keys->size;
@@ -96,12 +88,10 @@ void tree_matrix_destroy(double ***matrix, size_t lines)
 {
 	size_t i;
 
-	fprintf(stderr, "destruindo arvore...\n");
-
-	for (i = 0; i < lines; i++) {
-		free(*matrix[i]);
+        for (i = 0; i < lines; i++) {
+		free((*matrix)[i]);
 	}
-	free(**matrix);
+	free(*matrix);
 	*matrix = NULL;
 }
 

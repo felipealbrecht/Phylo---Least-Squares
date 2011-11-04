@@ -59,12 +59,10 @@ static void internal_node_add_content(internal_node_t internal_node, taxon_node_
  * Primeiro distancia eh do 'a', segunda do 'b' e tercira do 'c'.
  *
  **/
-double*	calcule_distances(double d_ab, double d_ac, double d_bc)
+double* calcule_distances(double d_ab, double d_ac, double d_bc)
 {
 	double *values = (double *) malloc(sizeof(double) * 3);
 	assert(values != NULL);
-
-	//fprintf(stderr, "%lf\n%lf\n%lf\n", d_ab, d_ac, d_bc);
 
 	values[A_TO_INTERNAL] = (d_ab + d_ac - d_bc) / 2;
 	values[B_TO_INTERNAL] = (d_ab + d_bc - d_ac) / 2;
@@ -342,7 +340,6 @@ tree_t tree_create(values_table_t values_table, taxon_triple_t triple)
 
 	double *values;
 	tree_t tree = (tree_t) malloc(sizeof(struct __tree));
-	memset(tree, sizeof(struct __tree), '\0');
 	assert(tree != NULL);
 
 	tree_item_create(tree, NULL, TREE, tree, 0.0);
@@ -357,13 +354,15 @@ tree_t tree_create(values_table_t values_table, taxon_triple_t triple)
 	tree->distances = hash_table_create();
 	tree->taxon_remains = list_clone(values_table->names->keys);
 
+        tree->matrix = NULL;
+        tree->matrix_lines = 0;
+        tree->matrix_columns = 0;
+
+        tree->item_a = NULL;
+        tree->item_b = NULL;
+        tree->item_c = NULL;
+
 	values = calcule_distances(triple->d_ab, triple->d_ac, triple->d_bc);
-
-	fprintf(stderr, "%s %lf\n", triple->taxon_a, values[A_TO_INTERNAL]);
-	fprintf(stderr, "%s %lf\n", triple->taxon_b, values[B_TO_INTERNAL]);
-	fprintf(stderr, "%s %lf\n", triple->taxon_c, values[C_TO_INTERNAL]);
-
-	fprintf(stderr, "self %p\n", tree->self);
 
 	taxon_node_create(tree, tree->self, triple->taxon_a, values[A_TO_INTERNAL]);
 	tree->branch_a = tree_branch_create(tree->self, tree->item_a, tree);
@@ -373,6 +372,8 @@ tree_t tree_create(values_table_t values_table, taxon_triple_t triple)
 
 	taxon_node_create(tree, tree->self, triple->taxon_c, values[C_TO_INTERNAL]);
 	tree->branch_c = tree_branch_create(tree->self, tree->item_c, tree);
+
+        free(values);
 	
 	assert(tree->taxon_nodes->keys->size == 3);
 
@@ -398,7 +399,6 @@ tree_t tree_clone(tree_t tree, tree_item_t self_clone)
 
 	tree_t tree_clone = (tree_t) malloc(sizeof(struct __tree));
 	assert(tree_clone != NULL);
-	memset(tree_clone, sizeof(struct __tree), '\0');
 
 	self_clone->item.tree = tree_clone;
 
@@ -417,6 +417,10 @@ tree_t tree_clone(tree_t tree, tree_item_t self_clone)
 	tree_clone->last_identifier = tree->last_identifier;
 	tree_clone->value           = tree->value;
 
+	tree_clone->item_a = NULL;
+	tree_clone->item_b = NULL;
+	tree_clone->item_c = NULL;
+
 	tree_clone->item_a = tree_item_clone(tree->item_a, tree_clone->self, tree_clone);
 	tree_clone->branch_a = tree_branch_create(tree_clone->self, tree_clone->item_a, tree_clone);
 
@@ -425,16 +429,8 @@ tree_t tree_clone(tree_t tree, tree_item_t self_clone)
 
 	tree_clone->item_c = tree_item_clone(tree->item_c, tree_clone->self, tree_clone);
 	tree_clone->branch_c = tree_branch_create(tree_clone->self, tree_clone->item_c, tree_clone);
-
+        
 	global_iteration_tree_count++;
-
-	//if(tree->item_b == tree->item_c) {
-	//	fprintf(stderr, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
-	//}
-
-//	assert(tree->item_a != tree->item_b);
-//	assert(tree->item_a != tree->item_c);
-//	assert(tree->item_b != tree->item_c);
 
 	return tree_clone;
 }
@@ -442,8 +438,6 @@ tree_t tree_clone(tree_t tree, tree_item_t self_clone)
 int tree_destroy(tree_t *tree)
 {
 	assert(*tree != NULL);
-
-	fprintf(stderr, "Destruindo %s com valor %f\n", (*tree)->id, (*tree)->value);
 
 	free((*tree)->id);
 	hash_table_destroy_all(&(*tree)->internal_nodes, internal_node_destroy);
@@ -458,10 +452,7 @@ int tree_destroy(tree_t *tree)
 		tree_matrix_destroy(&((*tree)->matrix), (*tree)->matrix_lines);
 	}
 	assert((*tree)->matrix == NULL);
-
-	free(*tree);
-	*tree = NULL;
-
+	free(*tree);	*tree = NULL;
 	return 1;
 }
 
@@ -485,6 +476,8 @@ int internal_node_destroy(void *data)
 int taxon_node_destroy(void *data)
 {
 	taxon_node_t *taxon_node = (taxon_node_t *) data;
+        //TODO: duplicate at allocation moment
+    //    free((*taxon_node)->taxon);
 	tree_item_destroy(&(*taxon_node)->self);
 	free( *taxon_node );
 	*taxon_node = NULL;
@@ -503,7 +496,7 @@ tree_item_t taxon_node_create(tree_t tree, tree_item_t parent, char *taxon, doub
 	taxon_node_t taxon_tree_node = (taxon_node_t) malloc(sizeof(struct __taxon_node));
 	assert(taxon_tree_node != NULL);
 
-	taxon_tree_node->taxon = taxon;
+	taxon_tree_node->taxon = strdup(taxon);
 
 	tree_item_t tree_item = tree_item_create(tree, parent, LEAF, taxon_tree_node, parent_distance);
 	assert(tree_item != NULL);
@@ -859,8 +852,6 @@ list_t create_triples(values_table_t values_table)
 	double distance_ac;
 	double distance_bc;
 
-	int total = 0;
-
 	for (i = 0; i < size; i++) {
 		num_1 = int_to_string(values_table, i);
 		for (j = i + 1; j < size; j++) {
@@ -891,17 +882,15 @@ list_t create_triples(values_table_t values_table)
 
 				triple = malloc(sizeof(struct __taxon_triple));
 
-				triple->taxon_a = num_1;
-				triple->taxon_b = num_2;
-				triple->taxon_c = num_3;
+				triple->taxon_a = strdup(num_1);
+				triple->taxon_b = strdup(num_2);
+				triple->taxon_c = strdup(num_3);
 
 				triple->d_ab = distance_ab;
 				triple->d_ac = distance_ac;
 				triple->d_bc = distance_bc;
 
 				triple->total_distance = distance_ab + distance_ac + distance_bc;
-
-				total++;
 
 				list_push(triples_list, num_1, triple);
 			}
@@ -913,10 +902,13 @@ list_t create_triples(values_table_t values_table)
 
 int triple_destroy(void *data)
 {
-	taxon_triple_t *triple = (taxon_triple_t*) data;
+	taxon_triple_t* triple = (taxon_triple_t*) data;
+
+        free((*triple)->taxon_a);
+        free((*triple)->taxon_b);
+        free((*triple)->taxon_c);
 
 	free(*triple);
-	*triple = NULL;
 
 	return 1;
 }
@@ -935,7 +927,7 @@ void print_tree(char *id, void* data)
 }
 
 /*Filtra os trios criados, removendo os abaixo */
-list_t filter_triples(list_t list, unsigned int saved)
+list_t filter_triples(list_t* list, unsigned int saved)
 {
 	assert(list != NULL);
 	assert(saved > 0);
@@ -944,7 +936,7 @@ list_t filter_triples(list_t list, unsigned int saved)
 	cell_t cell;
 	taxon_triple_t triple;
 	list_t remains_triples = list_create();
-	iterator_t iterator = list_iterator(list);
+	iterator_t iterator = list_iterator(*list);
 
 	for(i = 0; i < saved && iterator->has_next(iterator); i++) {
 		cell = iterator->next(iterator);
@@ -952,10 +944,14 @@ list_t filter_triples(list_t list, unsigned int saved)
 		list_push(remains_triples, triple->taxon_a, triple);
 	}
 
+        while(iterator->has_next(iterator)) {
+            cell = iterator->next(iterator);
+            triple = cell->data;
+            triple_destroy(&triple);
+        }
+        
+        list_destroy(list);
 	list_iterator_destroy(&iterator);
-
-
-	fprintf(stderr, "Continuaram %d sementes.\n", i);
 
 	return remains_triples;
 }
@@ -1064,8 +1060,8 @@ list_t add_taxon_trees(values_table_t values_table, list_t tree_seeds)
 
 			size_t lines, columns;
 			new_tree->matrix = tree_create_matrix(new_tree, &lines, &columns);
-
-//			fprintf(stderr, "%d %d para %d taxon e %d internal nodes\n", lines, columns, new_tree->taxon_nodes->keys->size, new_tree->internal_nodes->keys->size);
+                        new_tree->matrix_lines = lines;
+                        new_tree->matrix_columns = columns;
 
 			new_tree->value = calcule_tree_least_square(values_table, new_tree);
 			list_add(new_trees, new_tree->id, new_tree);
@@ -1084,9 +1080,6 @@ list_t add_taxon_trees(values_table_t values_table, list_t tree_seeds)
 	}
 	list_destroy(&tree_seeds);
 	list_iterator_destroy(&trees_iterator);
-
-
-
 
 	trees_iterator = list_iterator(new_trees);
 	list_t rtrees = list_create();
@@ -1321,42 +1314,37 @@ int main()
 	//values_table_t values_table = read_dist_file_from_paup("../data/domains.NX");
 	
         values_table_print(stderr, values_table);
-
-	//values_table_print(stdout, values_table);
-	list_t triples = create_triples(values_table);
-	fprintf(stderr, "ha %ld trios\n", triples->size);
-
-	list_t continuing_triples = filter_triples(triples, 1);
+	
+        list_t triples = create_triples(values_table);
+	fprintf(stderr, "There was created %ld triples... ", triples->size);
+	list_t continuing_triples = filter_triples(&triples, 1);
+	fprintf(stderr, "keep running %ld triples.\n", continuing_triples->size);
 
 	list_t trees = trees_create(values_table, continuing_triples);
 	
-	fprintf(stderr, "ha %ld trios\n", triples->size);
-	list_destroy_all(&triples, triple_destroy);
-	list_destroy(&continuing_triples);
+	list_destroy_all(&continuing_triples, triple_destroy);
 
 	trees = trees_construct(values_table, trees);
 
-	tree_t tree = list_get_by_pos(trees, 0);
-
 	print_tree_values(trees);
 
+        tree_t tree;
 	cell_t cell_tree;
 	iterator_t trees_iterator = list_iterator(trees);
 	while (trees_iterator->has_next(trees_iterator)) {
 		cell_tree = trees_iterator->next(trees_iterator);
 		tree = (tree_t) cell_tree->data;
+	        char *result = print_reprtree(values_table, tree);
+	        fprintf(stderr, "%s", result);
+                free(result);
 		tree_destroy(&tree);
 	}
+
 	list_destroy(&trees);
 	list_iterator_destroy(&trees_iterator);
+        values_table_destroy(&values_table);
+	
 
-	FILE* file = fopen("resultado", "w+");
-
-	char *result = print_reprtree(values_table, tree);
-
-	fprintf(file, "%s", result);
-
-	values_table_destroy(&values_table);
 	return 0;
 }
 #endif
