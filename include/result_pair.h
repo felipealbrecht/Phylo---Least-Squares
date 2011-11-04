@@ -37,6 +37,7 @@ struct __result_pair
 };
 
 result_pair_t result_pair_create(char *seq1, char *seq2, double value);
+int result_pair_hash_table_destroy(void *data);
 int result_pair_destroy(void *data);
 void result_pair_print(char *id, void *data);
 void* result_pair_clone(void *data);

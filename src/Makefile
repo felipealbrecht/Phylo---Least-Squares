@@ -41,8 +41,12 @@ debug: $(DEBUGOBJS)
 readdist:
 	gcc readdist.c -D_DEBUG_READDIST_ -I../include -I../../Pih-Lib/include/ ../../Pih-Lib/src/pih_lib.c -g -o readdist
 
+result_pair:
+	gcc result_pair.c scop2dist.c -D_TEST_RP_ -I../include -I../../Pih-Lib/include/ ../../Pih-Lib/src/pih_lib.c -g -o result_pair -lm
+
 clean: 
 	rm -rf $(STANDALONEOBJS) $(DEBUGOBJS)
 	rm -rf $(EXECNAME) $(EXECNAMEDEBUG)
 	rm -rf cscope.files  cscope.in.out  cscope.out  cscope.po.out
+	rm -rf readdist result_pair
 

@@ -13,7 +13,9 @@ static tree_item_t __item_get_down(char *taxon, tree_item_t item, list_t path);
 static tree_item_t __internal_node_get_down(char *taxon, internal_node_t internal_node, list_t path);
 static tree_item_t __tree_get_down(char *taxon, tree_t item, list_t path);
 
+#ifdef _DEBUG_
 static char* create_id(char* id_one, char *id_two, char *sep);
+#endif
 
 #define GET_PARENT(i) i->parent
 #define TREE_ROOT "tree-root"
@@ -33,9 +35,12 @@ double** tree_create_matrix(tree_t tree, size_t *lines, size_t *columns)
 	taxon_node_t leaf_from, leaf_to;
 
 	size_t i,j;
-	//char *path_name;
 	size_t c = combination(taxons->size, 2);
 	double **matrix = (double **) malloc(sizeof(double) * c);
+
+        #ifdef _DEBUG_
+	char *path_name;
+        #endif
 
 	CHECK(matrix);
 	for (i = 0; i < c; i++) {
@@ -57,7 +62,10 @@ double** tree_create_matrix(tree_t tree, size_t *lines, size_t *columns)
 			leaf_to = (taxon_node_t) cell_2->data;
 
 			path = leaf_walk_to(leaf_from, leaf_to);
-			//path_name = create_id(leaf_from->taxon, leaf_to->taxon, "_2_");
+                        
+                        #ifdef _DEBUG_
+			path_name = create_id(leaf_from->taxon, leaf_to->taxon, "_2_");
+                        #endif
 
 			j = 0;
 			in_iterator = list_iterator(tree->internal_nodes->keys);
@@ -229,7 +237,7 @@ static tree_item_t __tree_get_down(char *taxon, tree_t tree, list_t path)
 	return child;
 }
 
-
+#ifdef _DEBUG_
 static char* create_id(char* id_one, char *id_two, char *sep)
 {
 	assert(id_one != NULL);
@@ -250,3 +258,4 @@ static char* create_id(char* id_one, char *id_two, char *sep)
 
 	return path_id;
 }
+#endif

@@ -163,7 +163,8 @@ char *int_to_string(values_table_t values_table, size_t number)
 {
 	assert(number < values_table->size);
 
-	int chars = 2, num = number;
+	int chars = 2;
+        size_t num = number;
 	char *n = NULL;
 
 
@@ -176,9 +177,8 @@ char *int_to_string(values_table_t values_table, size_t number)
 		num = num / 10;
 	}
 
-	n = malloc(sizeof(char) * chars);
-	memset(n, '\0', sizeof(char) * chars);
-	sprintf(n, "%d", number);
+	n = calloc(sizeof(char), chars);
+	sprintf(n, "%ld", number);
 
 	values_table->number_cache[number] = n;
 

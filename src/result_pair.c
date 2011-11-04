@@ -27,6 +27,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
 #include "result_pair.h"
 #include "pih_lib.h"
@@ -232,6 +233,9 @@ int main()
 
 
 	convert_to_distmat(result_table);
+
+        hash_table_destroy_all(&result_table, result_pair_hash_table_destroy);
+
 	fprintf(stderr, "FIM!\n");
 
 	return 0;
@@ -262,7 +266,7 @@ int result_pair_destroy(void *data)
 		return 0;
 	}
 
-//	fprintf(stderr, "destruindo RP (%p) %s %s \n", *rp, (*rp)->sequence_1, (*rp)->sequence_2);
+	//fprintf(stderr, "destruindo RP (%p) %s %s \n", *rp, (*rp)->sequence_1, (*rp)->sequence_2);
 	free(*rp);
 	*rp = NULL;
 
@@ -295,7 +299,7 @@ void result_pair_print(char *id, void *data)
 
 int get_pos(char *id, hash_table_t table_position, int *actual)
 {
-	int pos = (int ) hash_table_get(table_position, id);
+	uint64_t pos = (uint64_t) hash_table_get(table_position, id);
 
 	if (pos == 0) {
 		(*actual)++;
@@ -304,6 +308,14 @@ int get_pos(char *id, hash_table_t table_position, int *actual)
 	}
 
 	return pos -1;
+}
+
+int result_pair_hash_table_destroy(void *data)
+{
+    hash_table_t *hash_table = (hash_table_t*) data;
+    size_t s = (*hash_table)->size;
+    hash_table_destroy_all(&(*hash_table), result_pair_destroy);
+    return (int) s;
 }
 
 /*
