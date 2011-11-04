@@ -95,7 +95,6 @@ DISTMAT
 *DISTMATalloc(int ntax)
 {
 	int             i;
-	int             name_size = 256;
 	static DISTMAT *distmat = NULL;
 
 	distmat = (DISTMAT *) malloc(sizeof(DISTMAT));

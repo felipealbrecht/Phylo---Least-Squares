@@ -370,7 +370,7 @@ DISTMAT *convert_to_distmat(hash_table_t result_table)
 	while (table_position_iterator->has_next(table_position_iterator)) {
 		cell = table_position_iterator->next(table_position_iterator);
 
-		distmat->taxa[((int) cell->data) - 1] = strdup(cell->id);
+		distmat->taxa[((uint64_t) cell->data) - 1] = strdup(cell->id);
 	}
         list_iterator_destroy(&table_position_iterator);
 
