@@ -37,6 +37,8 @@ static int tree_branch_destroy_fast(void *data);
 static int tree_branch_destroy(tree_branch_t *tree_branch, tree_t tree);
 static void tree_branch_print(char* id, void *data);
 
+static void taxon_node_print(char* id, void *data);
+
 static void print_repr_tree_item(values_table_t values_table, tree_item_t tree_item, string_buffer_t sb);
 static void print_repr_internal_node(values_table_t values_table, internal_node_t internal_node, string_buffer_t sb);
 
@@ -332,6 +334,13 @@ tree_item_t tree_item_clone(tree_item_t item, tree_item_t parent, tree_t tree)
 	return item_clone;
 }
 
+static void taxon_node_print(char* id, void *data) 
+{
+    taxon_node_t taxon_node = (taxon_node_t) data;
+
+    fprintf(stderr, "taxon: %p %s %s\n", taxon_node, id, taxon_node->taxon);
+}
+
 static void tree_branch_print(char* id, void *data)
 {
     tree_branch_t tree_branch = (tree_branch_t) data;
@@ -439,9 +448,6 @@ tree_t tree_clone(tree_t tree, tree_item_t self_clone)
 	tree_clone->distances       = hash_table_clone_all(tree->distances, result_pair_clone);
 	tree_clone->branchs         = hash_table_clone_all(tree->branchs, tree_branch_clone);
 
-        fprintf(stderr, "clone %p %ld\n", tree_clone->branchs, tree_clone->branchs->size); 
-        hash_table_print(tree_clone->branchs, tree_branch_print);
-
 	tree_clone->internal_nodes  = hash_table_create();
 	tree_clone->taxon_nodes     = hash_table_create();
 	tree_clone->taxon_remains   = list_clone(tree->taxon_remains);
@@ -469,8 +475,6 @@ tree_t tree_clone(tree_t tree, tree_item_t self_clone)
 int tree_destroy(tree_t *tree)
 {
 	assert(*tree != NULL);
-
-        fprintf(stderr, "destrying tree %s\n", (*tree)->id);
 
 	free((*tree)->id);
 	hash_table_destroy_all(&(*tree)->internal_nodes, internal_node_destroy);
@@ -510,10 +514,6 @@ int taxon_node_destroy(void *data)
 {
 	taxon_node_t *taxon_node = (taxon_node_t *) data;
 
-        fprintf(stderr, "Destroying %s(%p)\n", (*taxon_node)->taxon, *taxon_node);
-
-        //TODO: duplicate at allocation moment
-    //    free((*taxon_node)->taxon);
 	tree_item_destroy(&(*taxon_node)->self);
         free((*taxon_node)->taxon);
 	free( *taxon_node );
@@ -532,8 +532,6 @@ tree_item_t taxon_node_create(tree_t tree, tree_item_t parent, char *taxon, doub
 
 	taxon_node_t taxon_tree_node = (taxon_node_t) malloc(sizeof(struct __taxon_node));
 	assert(taxon_tree_node != NULL);
-
-        fprintf(stderr, "taxon %p (create)\n", taxon_tree_node);
 
 	taxon_tree_node->taxon = strdup(taxon);
 
@@ -564,8 +562,6 @@ taxon_node_t taxon_node_clone(taxon_node_t taxon_node, tree_t tree, tree_item_t 
 
 	hash_table_add(tree->taxon_nodes, taxon_clone->taxon, taxon_clone);
         
-        fprintf(stderr, "taxon %p (clone)\n", taxon_clone);
-
 	return taxon_clone;
 }
 
@@ -1099,7 +1095,6 @@ list_t add_taxon_trees(values_table_t values_table, list_t tree_seeds)
 			neighbor = hash_table_get(new_tree->taxon_nodes, neighbor->taxon);
 			assert(neighbor != NULL);
 			new_tree = tree_add_taxon(values_table, new_tree, cell_remain->id, neighbor);
-                        fprintf(stderr, "%p %ld\n", new_tree->branchs, new_tree->branchs->size);
 
 			size_t lines, columns;
 			new_tree->matrix = tree_create_matrix(new_tree, &lines, &columns);
@@ -1129,7 +1124,8 @@ list_t add_taxon_trees(values_table_t values_table, list_t tree_seeds)
 	int total = 0;
 	while (trees_iterator->has_next(trees_iterator) && total < 1 ) {
 		cell_tree = trees_iterator->next(trees_iterator);
-		list_add(rtrees, ((tree_t) cell_tree->data)->id, cell_tree->data);
+		tree = (tree_t) cell_tree->data;
+		list_add(rtrees, tree->id, cell_tree->data);
 		total++;
 	}
 

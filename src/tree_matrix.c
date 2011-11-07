@@ -74,12 +74,13 @@ double** tree_create_matrix(tree_t tree, size_t *lines, size_t *columns)
 		}
                 list_iterator_destroy(&it_2);
 	}
-        list_iterator_destroy(&it);
 
-        free(taxons);
+        list_iterator_destroy(&it);
+        list_destroy(&taxons);
 
 	*lines = c;
 	*columns = tree->internal_nodes->keys->size;
+	
 
 	return matrix;
 }
