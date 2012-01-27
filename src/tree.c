@@ -35,8 +35,12 @@ static void tree_item_destroy(tree_item_t *tree_item);
 
 static tree_branch_t tree_branch_create(tree_item_t item_a, tree_item_t item_b, tree_t tree);
 static void* tree_branch_clone(void *data);
+
 static size_t tree_branch_destroy_fast(void *data);
 static size_t tree_branch_destroy(tree_branch_t *tree_branch, tree_t tree);
+
+static void tree_branch_print(char* id, void *data);
+static void taxon_node_print(char* id, void *data);
 
 static void print_repr_tree_item(values_table_t values_table, tree_item_t tree_item, string_buffer_t sb);
 static void print_repr_internal_node(values_table_t values_table, internal_node_t internal_node, string_buffer_t sb);
@@ -104,8 +108,8 @@ static hash_table_t tree_item_get_distances(tree_item_t item)
 	}
 }
 
-/** 
- * Cria um item da arvore com os dados informados e 
+/**
+ * Cria um item da arvore com os dados informados e
  * faz a associacao birirecional entre o tree_item e o item
  **/
 static tree_item_t tree_item_create(tree_t tree, tree_item_t parent, node_type_t type, void *item, double parent_distance)
@@ -120,23 +124,23 @@ static tree_item_t tree_item_create(tree_t tree, tree_item_t parent, node_type_t
 	tree_item->parent = parent;
 	tree_item->type = type;
 	tree_item->parent_distance = parent_distance;
-	
+
 
 	switch (type) {
-		case LEAF: 	{ 
-			tree_item->item.taxon_node = item; 
-			((taxon_node_t) item )->self = tree_item; 
+		case LEAF: 	{
+			tree_item->item.taxon_node = item;
+			((taxon_node_t) item )->self = tree_item;
 			id = ((taxon_node_t) item )->taxon;
 			break;
 		}
 		case INTERNAL_NODE:	{
-			tree_item->item.internal_node = item; 
+			tree_item->item.internal_node = item;
 			((internal_node_t) item )->self = tree_item;
 			id = ((internal_node_t) item )->id;
 			break;
 		}
 		case TREE: {
-			tree_item->item.tree = item; 
+			tree_item->item.tree = item;
 			((tree_t) item )->self = tree_item;
 			id = ((tree_t) item )->id;
 			break;
@@ -147,7 +151,7 @@ static tree_item_t tree_item_create(tree_t tree, tree_item_t parent, node_type_t
 			assert(1 == 2);
 		}
 	}
-	
+
 	if (parent != NULL) {
 		parent_add_child(parent, tree_item, tree);
 	}
@@ -165,7 +169,7 @@ static void parent_add_child(tree_item_t parent, tree_item_t child, tree_t tree)
 			}
 			break;
 		}
-		
+
 		case TREE: {
 			tree_add_child(parent->item.tree, child);
 			break;
@@ -184,7 +188,7 @@ static tree_item_t parent_remove_child(tree_item_t parent, tree_item_t child, tr
 		case INTERNAL_NODE: {
 			return internal_node_remove_child(parent->item.internal_node, child, tree);
 		}
-		
+
 		case TREE: {
 			return tree_remove_child(parent->item.tree, child);
 		}
@@ -214,7 +218,6 @@ static void internal_node_add_child(internal_node_t internal_node, tree_item_t c
 		internal_node->branch_b = tree_branch_create(internal_node->self, child, tree);
 		child->parent_branch = internal_node->branch_b;
 	} else {
-		fprintf(stderr, "O internal_node %s nao tem mais espacos para filhos!\n", internal_node->id);
 		assert(1 == 2);
 	}
 }
@@ -235,7 +238,7 @@ static tree_item_t internal_node_remove_child(internal_node_t internal_node, tre
 		internal_node->item_b = NULL;
 		tree_branch_destroy(&(internal_node->branch_b), tree);
 		tree_item = child;
-	} 
+	}
 
 	return tree_item;
 }
@@ -289,7 +292,7 @@ static tree_item_t tree_remove_child(tree_t tree, tree_item_t child)
 		item = child;
 		tree->item_c = NULL;
 		tree_branch_destroy(&(tree->branch_c), tree);
-	} 
+	}
 
 	return item;
 }
@@ -312,17 +315,17 @@ tree_item_t tree_item_clone(tree_item_t item, tree_item_t parent, tree_t tree)
 
 	switch (item->type) {
 		case LEAF: {
-			taxon_node_clone(item->item.taxon_node, tree, item_clone); 
+			taxon_node_clone(item->item.taxon_node, tree, item_clone);
 			break;
 		}
-		
-		case INTERNAL_NODE: { 
-			internal_node_clone(item->item.internal_node, tree, item_clone); 
+
+		case INTERNAL_NODE: {
+			internal_node_clone(item->item.internal_node, tree, item_clone);
 			break;
 		}
 
 		case TREE: {
-			tree_clone(item->item.tree, item_clone); 
+			tree_clone(item->item.tree, item_clone);
 			break;
 		}
 
@@ -336,9 +339,40 @@ tree_item_t tree_item_clone(tree_item_t item, tree_item_t parent, tree_t tree)
 		parent_add_child(parent, item_clone, tree);
 	}
 
-
-
 	return item_clone;
+}
+
+static void taxon_node_print(char* id, void *data)
+{
+    taxon_node_t taxon_node = (taxon_node_t) data;
+
+    fprintf(stderr, "taxon: %p %s %s\n", taxon_node, id, taxon_node->taxon);
+}
+
+static void tree_branch_print(char* id, void *data)
+{
+    tree_branch_t tree_branch = (tree_branch_t) data;
+
+    fprintf(stderr, "branch %p %s %s\n", tree_branch, id, tree_branch->id);
+}
+
+void tree_item_print(tree_item_t tree_item)
+{
+    assert(tree_item != NULL);
+
+    switch (tree_item->type) {
+        case LEAF:
+            fprintf(stderr, "Leaf: %s\n", tree_item->item.taxon_node->taxon);
+            break;
+
+        case INTERNAL_NODE:
+            fprintf(stderr, "Internal Node: %s\n", tree_item->item.internal_node->id);
+            break;
+
+        case TREE:
+            fprintf(stderr, "Internal Node: %s\n", tree_item->item.tree->id);
+            break;
+    }
 }
 
 tree_t tree_create(values_table_t values_table, taxon_triple_t triple)
@@ -369,19 +403,23 @@ tree_t tree_create(values_table_t values_table, taxon_triple_t triple)
         tree->item_b = NULL;
         tree->item_c = NULL;
 
+        tree->branch_a = NULL;
+        tree->branch_b = NULL;
+        tree->branch_c = NULL;
+
 	values = calcule_distances(triple->d_ab, triple->d_ac, triple->d_bc);
 
 	taxon_node_create(tree, tree->self, triple->taxon_a, values[A_TO_INTERNAL]);
-	tree->branch_a = tree_branch_create(tree->self, tree->item_a, tree);
-	
+	//tree->branch_a = tree_branch_create(tree->self, tree->item_a, tree);
+
 	taxon_node_create(tree, tree->self, triple->taxon_b, values[B_TO_INTERNAL]);
-	tree->branch_b = tree_branch_create(tree->self, tree->item_b, tree);
+	//tree->branch_b = tree_branch_create(tree->self, tree->item_b, tree);
 
 	taxon_node_create(tree, tree->self, triple->taxon_c, values[C_TO_INTERNAL]);
-	tree->branch_c = tree_branch_create(tree->self, tree->item_c, tree);
+	//tree->branch_c = tree_branch_create(tree->self, tree->item_c, tree);
 
         free(values);
-	
+
 	assert(tree->taxon_nodes->keys->size == 3);
 
 	fprintf(stderr, "Arvore %s criada\n", tree->id);
@@ -429,14 +467,14 @@ tree_t tree_clone(tree_t tree, tree_item_t self_clone)
 	tree_clone->item_c = NULL;
 
 	tree_clone->item_a = tree_item_clone(tree->item_a, tree_clone->self, tree_clone);
-	tree_clone->branch_a = tree_branch_create(tree_clone->self, tree_clone->item_a, tree_clone);
+        //tree_clone->branch_a = tree_branch_create(tree_clone->self, tree_clone->item_a, tree_clone);
 
 	tree_clone->item_b = tree_item_clone(tree->item_b, tree_clone->self, tree_clone);
-	tree_clone->branch_b = tree_branch_create(tree_clone->self, tree_clone->item_b, tree_clone);
+	//tree_clone->branch_b = tree_branch_create(tree_clone->self, tree_clone->item_b, tree_clone);
 
 	tree_clone->item_c = tree_item_clone(tree->item_c, tree_clone->self, tree_clone);
-	tree_clone->branch_c = tree_branch_create(tree_clone->self, tree_clone->item_c, tree_clone);
-        
+	//tree_clone->branch_c = tree_branch_create(tree_clone->self, tree_clone->item_c, tree_clone);
+
 	global_iteration_tree_count++;
 
 	return tree_clone;
@@ -466,7 +504,7 @@ int tree_destroy(tree_t *tree)
 size_t internal_node_destroy(void *data)
 {
 	internal_node_t *internal_node = (internal_node_t *) data;
-	
+
 	// Nao pode remover as distancias porque elas sao reaproveitadas entre diversas arvores
 	hash_table_destroy_all( &(*internal_node)->distances, result_pair_destroy);
 	assert((*internal_node)->distances == NULL);
@@ -483,9 +521,9 @@ size_t internal_node_destroy(void *data)
 size_t taxon_node_destroy(void *data)
 {
 	taxon_node_t *taxon_node = (taxon_node_t *) data;
-        //TODO: duplicate at allocation moment
-    //    free((*taxon_node)->taxon);
+
 	tree_item_destroy(&(*taxon_node)->self);
+        free((*taxon_node)->taxon);
 	free( *taxon_node );
 	*taxon_node = NULL;
 
@@ -510,7 +548,7 @@ tree_item_t taxon_node_create(tree_t tree, tree_item_t parent, char *taxon, doub
 
 	hash_table_add(tree->taxon_nodes, taxon_tree_node->taxon, taxon_tree_node);
 	list_remove_by_id(tree->taxon_remains, taxon);
-	
+
 	assert(tree_item->type == LEAF);
 	return tree_item;
 }
@@ -528,7 +566,8 @@ taxon_node_t taxon_node_clone(taxon_node_t taxon_node, tree_t tree, tree_item_t 
 	self_clone->item.taxon_node = taxon_clone;
 
 	taxon_clone->self  = self_clone;
-	taxon_clone->taxon = taxon_node->taxon;
+	taxon_clone->taxon = strdup(taxon_node->taxon);
+
 	hash_table_add(tree->taxon_nodes, taxon_clone->taxon, taxon_clone);
 
 	return taxon_clone;
@@ -572,7 +611,7 @@ internal_node_t internal_node_clone(internal_node_t internal_node, tree_t tree_c
 	assert(internal_node != NULL);
 	assert(tree_clone != NULL);
 	assert(self_clone != NULL);
-	
+
 	internal_node_t internal_clone = (internal_node_t) malloc(sizeof(struct __internal_node));
 	assert(internal_clone != NULL);
 	memset(internal_clone, '\0', sizeof(struct __internal_node));
@@ -623,10 +662,10 @@ int tree_update_internal_nodes_distances(internal_node_t internal_node_added, tr
 
 	int total = 0;
 
-	hash_table_add(internal_node_added->distances, tree_item_get_id(actual_node), 
+	hash_table_add(internal_node_added->distances, tree_item_get_id(actual_node),
 		result_pair_create(internal_node_added->id, tree_item_get_id(actual_node), parent_distance));
 
-	hash_table_add(tree_item_get_distances(actual_node), internal_node_added->id, 
+	hash_table_add(tree_item_get_distances(actual_node), internal_node_added->id,
 		result_pair_create(tree_item_get_id(actual_node), internal_node_added->id, parent_distance));
 
 
@@ -639,9 +678,9 @@ int tree_update_internal_nodes_distances(internal_node_t internal_node_added, tr
 		total += __tree_update_internal_nodes_distances(actual_node->item.tree->item_b, internal_node_added, actual_node, previous_node, parent_distance);
 		total += __tree_update_internal_nodes_distances(actual_node->item.tree->item_c, internal_node_added, actual_node, previous_node, parent_distance);
 	} else if (actual_node->type == INTERNAL_NODE) {
-		total += __tree_update_internal_nodes_distances(actual_node->item.internal_node->item_a, 
+		total += __tree_update_internal_nodes_distances(actual_node->item.internal_node->item_a,
 			internal_node_added, actual_node, previous_node, parent_distance);
-		total += __tree_update_internal_nodes_distances(actual_node->item.internal_node->item_b, 
+		total += __tree_update_internal_nodes_distances(actual_node->item.internal_node->item_b,
 			internal_node_added, actual_node, previous_node, parent_distance);
 	}
 
@@ -656,7 +695,7 @@ static int __tree_update_internal_nodes_distances(tree_item_t tree_item, interna
 		total++;
 		total += tree_update_internal_nodes_distances(internal_node_added, tree_item, actual_node, parent_distance + tree_item->parent_distance);
 	}
-	
+
 	return total;
 }
 
@@ -668,12 +707,12 @@ static tree_branch_t tree_branch_create(tree_item_t item_a, tree_item_t item_b, 
 
 	tree_branch_t branch = (tree_branch_t) malloc(sizeof(struct __tree_branch));
 	CHECK(branch);
-	
+
 	branch->id = create_id(get_id(item_a), get_id(item_b), "_<->_");
 	branch->item_a = item_a;
 	branch->item_b = item_b;
 	hash_table_add(tree->branchs, branch->id, branch);
-	
+
 	return branch;
 }
 
@@ -709,7 +748,7 @@ static size_t tree_branch_destroy_fast(void *data)
 	return 1;
 }
 
-static size_t tree_branch_destroy(tree_branch_t *tree_branch, tree_t tree) 
+static size_t tree_branch_destroy(tree_branch_t *tree_branch, tree_t tree)
 {
 	if (*tree_branch == NULL) {
 		return 0;
@@ -745,8 +784,8 @@ static char* create_id(char* id_one, char *id_two, char *sep)
 
     size_t s = len_id_one + len_id_two + len_sep + 1;
 
-    char *path_id = (char *) malloc(sizeof(char) * s); 
-    memset(path_id, '\0', s); 
+    char *path_id = (char *) malloc(sizeof(char) * s);
+    memset(path_id, '\0', s);
 
     memcpy(path_id, id_one, len_id_one);
     memcpy(path_id + len_id_one, sep, len_sep);
@@ -762,13 +801,13 @@ static char* get_id(tree_item_t item)
 	switch (item->type) {
 		case INTERNAL_NODE:
 			return item->item.internal_node->id;
-			
+
 		case LEAF:
 			return item->item.taxon_node->taxon;
-			
+
 		case TREE:
 			return TREE_ROOT;
-			
+
 		default:
 			return NULL;
 	}
@@ -825,7 +864,7 @@ static size_t triple_comparer(void *one, void *two)
 
 	if (triple_one->total_distance == triple_two->total_distance) {
 		return 0;
-	} 
+	}
 
 	else if (triple_one->total_distance > triple_two->total_distance) {
 		return 1;
@@ -839,10 +878,10 @@ static size_t triple_comparer(void *one, void *two)
 
 
 /**
- * Retorna uma lista contendo todas os trios de taxons 
+ * Retorna uma lista contendo todas os trios de taxons
  *  possiveis atraves do values_table passado
  *
- * Os trios sao compostos por inteiros na forma de strings que representam 
+ * Os trios sao compostos por inteiros na forma de strings que representam
  * a posicao do taxon na values_table.
  */
 list_t create_triples(values_table_t values_table)
@@ -876,7 +915,7 @@ list_t create_triples(values_table_t values_table)
 					fprintf(stderr, "%lu %lu\n", i, j);
 					assert(i != j);
 				}
-				
+
 				if (i == k) {
 					fprintf(stderr, "%lu %lu\n", i, k);
 					assert(i != k);
@@ -923,7 +962,7 @@ static size_t triple_destroy(void *data)
 void print_triple(char *id, void* data)
 {
 	taxon_triple_t triple = (taxon_triple_t) data;
-	printf("%s: [%s, %s, %s](%lf , %lf , %lf) total: %lf\n", id, triple->taxon_a, triple->taxon_b, triple->taxon_c, 
+	printf("%s: [%s, %s, %s](%lf , %lf , %lf) total: %lf\n", id, triple->taxon_a, triple->taxon_b, triple->taxon_c,
 		triple->d_ab, triple->d_ac, triple->d_bc, triple->total_distance);
 }
 
@@ -956,7 +995,7 @@ list_t filter_triples(list_t* list, unsigned int saved)
             triple = cell->data;
             triple_destroy(&triple);
         }
-        
+
         list_destroy(list);
 	list_iterator_destroy(&iterator);
 
@@ -1022,7 +1061,7 @@ double calculate_total_distance_tree(tree_t tree)
 			taxon_node_two = (taxon_node_t) cell_two->data;
 
 			if (taxon_node_one != taxon_node_two) {
-				total += calcule_taxons_distance(tree, 
+				total += calcule_taxons_distance(tree,
 					(taxon_node_t) taxon_node_one, (taxon_node_t) taxon_node_two);
 			}
 		}
@@ -1040,15 +1079,15 @@ list_t add_taxon_trees(values_table_t values_table, list_t tree_seeds)
 	taxon_node_t neighbor;
 	tree_t tree, new_tree;
 	list_t new_trees;
-	
+
 	new_trees = list_create();
 	trees_iterator = list_iterator(tree_seeds);
 	global_iteration_tree_count = 0;
 	while(trees_iterator->has_next(trees_iterator)) {
 		cell_tree = trees_iterator->next(trees_iterator);
 		tree = (tree_t) cell_tree->data;
-			
-		cell_remain = tree->taxon_remains->first;	
+
+		cell_remain = tree->taxon_remains->first;
 		positions_iterator = list_iterator(tree->taxon_nodes->keys);
 		while (positions_iterator->has_next(positions_iterator)) {
 			cell_pos = positions_iterator->next(positions_iterator);
@@ -1093,7 +1132,8 @@ list_t add_taxon_trees(values_table_t values_table, list_t tree_seeds)
 	int total = 0;
 	while (trees_iterator->has_next(trees_iterator) && total < 1 ) {
 		cell_tree = trees_iterator->next(trees_iterator);
-		list_add(rtrees, ((tree_t) cell_tree->data)->id, cell_tree->data);
+		tree = (tree_t) cell_tree->data;
+		list_add(rtrees, tree->id, cell_tree->data);
 		total++;
 	}
 
@@ -1104,6 +1144,7 @@ list_t add_taxon_trees(values_table_t values_table, list_t tree_seeds)
 		tree_destroy(&tree_to_destroy);
 	}
 	list_iterator_destroy(&trees_iterator);
+        list_destroy(&new_trees);
 
 	return rtrees;
 }
@@ -1113,12 +1154,12 @@ list_t add_taxon_trees(values_table_t values_table, list_t tree_seeds)
              [ Taxon X ]
 			     |           /-- [Taxon id]
 				 |          /
-				 o-----------[ Taxon Node ]  
+				 o-----------[ Taxon Node ]
 				 |
 				 |
  			 [ Taxon Y ]
 */
-		
+
 tree_t tree_add_taxon(values_table_t values_table, tree_t tree, char *taxon_id, taxon_node_t neighbor_node)
 {
 	assert(values_table != NULL);
@@ -1130,8 +1171,8 @@ tree_t tree_add_taxon(values_table_t values_table, tree_t tree, char *taxon_id, 
 	assert(tree_item != NULL);
 
 	// Posicionar um novo parent para o neighbor
-	tree_item_t internal_node = internal_node_create(tree, neighbor_node->self->parent, 0.60);	
-	
+	tree_item_t internal_node = internal_node_create(tree, neighbor_node->self->parent, 0.60);
+
 	// Adicionar o antigo
 	neighbor_node->self->parent = internal_node;
 
@@ -1142,7 +1183,7 @@ tree_t tree_add_taxon(values_table_t values_table, tree_t tree, char *taxon_id, 
 	internal_node->item.internal_node->branch_a = tree_branch_create(internal_node, neighbor_node->self, tree);
 	neighbor_node->self->parent_branch = internal_node->item.internal_node->branch_a;
 	list_add(internal_node->item.internal_node->content, neighbor_node->taxon, neighbor_node);
-	
+
 	// Adiciona o nodo taxon_id
 	taxon_node_create(tree, internal_node, taxon_id, 1.1);
 
@@ -1176,10 +1217,10 @@ double calcule_tree_least_square(values_table_t values_table, tree_t tree)
 			cell_two = taxon_iterator_two->next(taxon_iterator_two);
 
 			if (cell_one->data != cell_two->data) {
-				taxons_distance = calcule_taxons_distance(tree, 
+				taxons_distance = calcule_taxons_distance(tree,
 					(taxon_node_t) cell_one->data, (taxon_node_t) cell_two->data);
 
-				matrix_distance = values_table_get_value(values_table, 
+				matrix_distance = values_table_get_value(values_table,
 						atoi( ((taxon_node_t) cell_one->data)->taxon),
 						atoi( ((taxon_node_t) cell_two->data)->taxon)
 						);
@@ -1202,7 +1243,7 @@ double calcule_taxons_distance(tree_t tree, taxon_node_t taxon_one, taxon_node_t
 	assert(taxon_two != NULL);
 
 	tree_item_t parent_one, parent_two;
-		
+
 	if (taxon_one->self->parent == taxon_two->self->parent) {
 		return taxon_one->self->parent_distance + taxon_two->self->parent_distance;
 	} else {
@@ -1246,9 +1287,9 @@ void print_tree_values(list_t trees)
 static void print_repr_tree_item(values_table_t values_table, tree_item_t tree_item, string_buffer_t sb)
 {
 	if (tree_item->type == LEAF) {
-		string_buffer_add(sb, 
-			"%s:%.5lf", 
-			values_table_get_name(values_table, atoi(tree_item->item.taxon_node->taxon)), 
+		string_buffer_add(sb,
+			"%s:%.5lf",
+			values_table_get_name(values_table, atoi(tree_item->item.taxon_node->taxon)),
 			tree_item->parent_distance);
 
 	} else if (tree_item->type == INTERNAL_NODE) {
@@ -1276,14 +1317,14 @@ char *print_reprtree(values_table_t values_table, tree_t tree)
 {
 	assert(tree != NULL);
 	string_buffer_t sb = string_buffer_create();
-	
+
 	string_buffer_add(sb, "(");
 
-	print_repr_tree_item(values_table, tree->item_a, sb);		
+	print_repr_tree_item(values_table, tree->item_a, sb);
 	string_buffer_add(sb, ",");
-	print_repr_tree_item(values_table, tree->item_b, sb);		
+	print_repr_tree_item(values_table, tree->item_b, sb);
 	string_buffer_add(sb, ",");
-	print_repr_tree_item(values_table, tree->item_c, sb);		
+	print_repr_tree_item(values_table, tree->item_c, sb);
 
 	string_buffer_add(sb, ")");
 	string_buffer_add(sb, ";");
@@ -1310,25 +1351,25 @@ list_t trees_construct(values_table_t values_table, list_t trees)
 }
 
 #ifdef _LS_RUN_
-int main() 
+int main()
 {
         values_table_t values_table = read_dist_file_from_phylip("../data/really_simple_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/tcc_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/simple_matrix");
-	//values_table_t values_table = read_dist_file_from_phylip("../data/not_so_simple_matrix");
+        //values_table_t values_table = read_dist_file_from_phylip("../data/not_so_simple_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/more_complex_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/49_taxons");
 	//values_table_t values_table = read_dist_file_from_paup("../data/domains.NX");
-	
+
         values_table_print(stderr, values_table);
-	
+
         list_t triples = create_triples(values_table);
 	fprintf(stderr, "There was created %ld triples... ", triples->size);
 	list_t continuing_triples = filter_triples(&triples, 1);
 	fprintf(stderr, "keep running %ld triples.\n", continuing_triples->size);
 
 	list_t trees = trees_create(values_table, continuing_triples);
-	
+
 	list_destroy_all(&continuing_triples, triple_destroy);
 
 	trees = trees_construct(values_table, trees);
@@ -1350,7 +1391,7 @@ int main()
 	list_destroy(&trees);
 	list_iterator_destroy(&trees_iterator);
         values_table_destroy(&values_table);
-	
+
 
 	return 0;
 }

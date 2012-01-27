@@ -119,6 +119,7 @@ tree_item_t tree_item_clone(tree_item_t item, tree_item_t parent, tree_t tree);
 taxon_node_t taxon_node_clone(taxon_node_t taxon_node, tree_t tree, tree_item_t item_clone);
 internal_node_t internal_node_clone(internal_node_t internal_node, tree_t tree_clone, tree_item_t tree_item_clone);
 tree_t tree_clone(tree_t tree, tree_item_t self_clone);
+void tree_item_print(tree_item_t tree_item);
 
 list_t create_triples(values_table_t values_table);
 list_t filter_triples(list_t *list, unsigned int saved);

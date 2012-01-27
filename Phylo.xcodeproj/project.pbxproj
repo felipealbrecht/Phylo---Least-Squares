@@ -12,7 +12,6 @@
 		F0CE8BF914D304750095473A /* scop2dist.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF314D304750095473A /* scop2dist.c */; };
 		F0CE8BFA14D304750095473A /* tree_matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF414D304750095473A /* tree_matrix.c */; };
 		F0CE8BFB14D304750095473A /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF514D304750095473A /* tree.c */; };
-		F0CE8BFC14D304750095473A /* Makefile.old in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF614D304750095473A /* Makefile.old */; };
 		F0CE8C1414D306EB0095473A /* pih_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8C1314D306EB0095473A /* pih_lib.c */; };
 /* End PBXBuildFile section */
 
@@ -35,7 +34,6 @@
 		F0CE8BF314D304750095473A /* scop2dist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scop2dist.c; path = src/scop2dist.c; sourceTree = SOURCE_ROOT; };
 		F0CE8BF414D304750095473A /* tree_matrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree_matrix.c; path = src/tree_matrix.c; sourceTree = SOURCE_ROOT; };
 		F0CE8BF514D304750095473A /* tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree.c; path = src/tree.c; sourceTree = SOURCE_ROOT; };
-		F0CE8BF614D304750095473A /* Makefile.old */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.old; path = src/Makefile.old; sourceTree = SOURCE_ROOT; };
 		F0CE8BFE14D305450095473A /* readdist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = readdist.h; path = include/readdist.h; sourceTree = SOURCE_ROOT; };
 		F0CE8BFF14D305450095473A /* result_pair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = result_pair.h; path = include/result_pair.h; sourceTree = SOURCE_ROOT; };
 		F0CE8C0014D305450095473A /* scop2dist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scop2dist.h; path = include/scop2dist.h; sourceTree = SOURCE_ROOT; };
@@ -97,7 +95,6 @@
 		F0CE8C0314D305520095473A /* src */ = {
 			isa = PBXGroup;
 			children = (
-				F0CE8BF614D304750095473A /* Makefile.old */,
 				F0CE8C1314D306EB0095473A /* pih_lib.c */,
 				F0CE8BF114D304750095473A /* readdist.c */,
 				F0CE8BF214D304750095473A /* result_pair.c */,
@@ -195,7 +192,6 @@
 				F0CE8BF914D304750095473A /* scop2dist.c in Sources */,
 				F0CE8BFA14D304750095473A /* tree_matrix.c in Sources */,
 				F0CE8BFB14D304750095473A /* tree.c in Sources */,
-				F0CE8BFC14D304750095473A /* Makefile.old in Sources */,
 				F0CE8C1414D306EB0095473A /* pih_lib.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
