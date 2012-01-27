@@ -29,12 +29,14 @@ static int global_iteration_tree_count;
 static char* create_id(char* id_one, char *id_two, char *sep);
 static char* get_id(tree_item_t item);
 
+static char *tree_item_get_id(tree_item_t item);
+
 static void tree_item_destroy(tree_item_t *tree_item);
 
 static tree_branch_t tree_branch_create(tree_item_t item_a, tree_item_t item_b, tree_t tree);
 static void* tree_branch_clone(void *data);
-static int tree_branch_destroy_fast(void *data);
-static int tree_branch_destroy(tree_branch_t *tree_branch, tree_t tree);
+static size_t tree_branch_destroy_fast(void *data);
+static size_t tree_branch_destroy(tree_branch_t *tree_branch, tree_t tree);
 
 static void print_repr_tree_item(values_table_t values_table, tree_item_t tree_item, string_buffer_t sb);
 static void print_repr_internal_node(values_table_t values_table, internal_node_t internal_node, string_buffer_t sb);
@@ -52,6 +54,11 @@ static tree_item_t tree_remove_child(tree_t tree, tree_item_t child);
 static int __tree_update_internal_nodes_distances(tree_item_t tree_item, internal_node_t internal_node_added, tree_item_t actual_node, tree_item_t previous_node, double parent_distance);
 
 static void internal_node_add_content(internal_node_t internal_node, taxon_node_t taxon_node);
+static hash_table_t tree_item_get_distances(tree_item_t item);
+static tree_item_t tree_item_create(tree_t tree, tree_item_t parent, node_type_t type, void *item, double parent_distance);
+
+static size_t triple_comparer(void *one, void *two);
+static size_t triple_destroy(void *data);
 
 /**
  * Calcula a distancia entre os tres taxons e retorna uma matriz com 3 elementos contendo as distancias
@@ -72,7 +79,7 @@ double* calcule_distances(double d_ab, double d_ac, double d_bc)
 }
 
 
-char *tree_item_get_id(tree_item_t item)
+static char *tree_item_get_id(tree_item_t item)
 {
 	if (item == NULL) {
 		return "null";
@@ -86,7 +93,7 @@ char *tree_item_get_id(tree_item_t item)
 	}
 }
 
-hash_table_t tree_item_get_distances(tree_item_t item)
+static hash_table_t tree_item_get_distances(tree_item_t item)
 {
 	assert(item != NULL);
 
@@ -101,7 +108,7 @@ hash_table_t tree_item_get_distances(tree_item_t item)
  * Cria um item da arvore com os dados informados e 
  * faz a associacao birirecional entre o tree_item e o item
  **/
-tree_item_t tree_item_create(tree_t tree, tree_item_t parent, node_type_t type, void *item, double parent_distance)
+static tree_item_t tree_item_create(tree_t tree, tree_item_t parent, node_type_t type, void *item, double parent_distance)
 {
 	assert(item != NULL);
 
@@ -456,7 +463,7 @@ int tree_destroy(tree_t *tree)
 	return 1;
 }
 
-int internal_node_destroy(void *data)
+size_t internal_node_destroy(void *data)
 {
 	internal_node_t *internal_node = (internal_node_t *) data;
 	
@@ -473,7 +480,7 @@ int internal_node_destroy(void *data)
 	return 1;
 }
 
-int taxon_node_destroy(void *data)
+size_t taxon_node_destroy(void *data)
 {
 	taxon_node_t *taxon_node = (taxon_node_t *) data;
         //TODO: duplicate at allocation moment
@@ -687,7 +694,7 @@ static void* tree_branch_clone(void *data)
 	return branch_clone;
 }
 
-static int tree_branch_destroy_fast(void *data)
+static size_t tree_branch_destroy_fast(void *data)
 {
 	tree_branch_t *tree_branch = (tree_branch_t *) data;
 
@@ -702,7 +709,7 @@ static int tree_branch_destroy_fast(void *data)
 	return 1;
 }
 
-static int tree_branch_destroy(tree_branch_t *tree_branch, tree_t tree) 
+static size_t tree_branch_destroy(tree_branch_t *tree_branch, tree_t tree) 
 {
 	if (*tree_branch == NULL) {
 		return 0;
@@ -802,7 +809,7 @@ int tree_comparer(const void *one, const void *two)
 
 }
 
-int triple_comparer(void *one, void *two)
+static size_t triple_comparer(void *one, void *two)
 {
 	assert(one != NULL);
 	assert(two != NULL);
@@ -840,7 +847,7 @@ int triple_comparer(void *one, void *two)
  */
 list_t create_triples(values_table_t values_table)
 {
-	int i, j, k, size;
+	size_t i, j, k, size;
 	char *num_1, *num_2, *num_3;
 	taxon_triple_t triple = NULL;
 
@@ -866,17 +873,17 @@ list_t create_triples(values_table_t values_table)
 
 				// Nao se pode criar uma tripla com dois ou mais valores iguais
 				if (i == j) {
-					fprintf(stderr, "%d %d\n", i, j);
+					fprintf(stderr, "%lu %lu\n", i, j);
 					assert(i != j);
 				}
 				
 				if (i == k) {
-					fprintf(stderr, "%d %d\n", i, k);
+					fprintf(stderr, "%lu %lu\n", i, k);
 					assert(i != k);
 				}
 
 				if (j == k) {
-					fprintf(stderr, "%d %d\n", j, k);
+					fprintf(stderr, "%lu %lu\n", j, k);
 					assert(j != k);
 				}
 
@@ -900,7 +907,7 @@ list_t create_triples(values_table_t values_table)
 	return triples_list;
 }
 
-int triple_destroy(void *data)
+static size_t triple_destroy(void *data)
 {
 	taxon_triple_t* triple = (taxon_triple_t*) data;
 
@@ -1290,7 +1297,7 @@ list_t trees_construct(values_table_t values_table, list_t trees)
 	assert(values_table != NULL);
 	assert(trees != NULL);
 
-	int remain_taxons = values_table_get_size(values_table) - 3;
+	size_t remain_taxons = values_table_get_size(values_table) - 3;
 
 	while (remain_taxons > 0) {
 		fprintf(stderr, "Iteracao %d\n", global_iteration);

@@ -28,32 +28,25 @@
 
 typedef struct
 {
-	int             ntax; /* number of taxa */
+	size_t        ntax; /* number of taxa */
 	char          **taxa; /* pointer to array of taxa names */
 	double        **dist; /* pointer to array of distances */
 	int           **flag; /* pointer to array of flags for each pairwise dist */
 }
 DISTMAT;
 
-DISTMAT
-*get_distmat(char *listfile_name, int blast);
+DISTMAT *get_distmat(char *listfile_name, int blast);
 
-int
-get_ntax(char *listfile_name);
+size_t get_ntax(char *listfile_name);
 
-DISTMAT
-*DISTMATalloc(int ntax);
+DISTMAT *DISTMATalloc(size_t ntax);
 
-void
-DISTMATdestroy(DISTMAT *distmat);
+void DISTMATdestroy(DISTMAT *distmat);
 
-DISTMAT
-*get_scores(DISTMAT *distmat, char *listfile_name, int blast);
+DISTMAT *get_scores(DISTMAT *distmat, char *listfile_name, size_t blast);
 
-void
-print_NX_distmat(DISTMAT *distmat, char *NXfile_name);
+void print_NX_distmat(DISTMAT *distmat, char *NXfile_name);
 
-void
-print_NX_distmat_file(DISTMAT *distmat, FILE* NXfile_ptr);
+void print_NX_distmat_file(DISTMAT *distmat, FILE* NXfile_ptr);
 
 #endif

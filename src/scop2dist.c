@@ -40,8 +40,9 @@
 #include <sys/types.h>
 #include "scop2dist.h"
 
-long
-skipspace(FILE *afp)
+static long skipspace(FILE *afp);
+
+static long skipspace(FILE *afp)
 {
 	char ch = ' ';
 	while (!feof(afp) && isspace(ch)) {
@@ -54,7 +55,7 @@ skipspace(FILE *afp)
 DISTMAT
 *get_distmat(char *listfile_name, int blast)
 {
-	int           ntax;
+	size_t         ntax;
 	DISTMAT      *distmat = NULL;
 
 	ntax = get_ntax(listfile_name);
@@ -65,8 +66,7 @@ DISTMAT
 }
 
 
-int
-get_ntax(char *listfile_name)
+size_t get_ntax(char *listfile_name)
 {
 	FILE          *listfile = NULL;
 	char           ch = 'A';
@@ -91,8 +91,7 @@ get_ntax(char *listfile_name)
 }
 
 
-DISTMAT
-*DISTMATalloc(int ntax)
+DISTMAT *DISTMATalloc(size_t ntax)
 {
 	int             i;
 	static DISTMAT *distmat = NULL;
@@ -132,7 +131,7 @@ DISTMATdestroy(DISTMAT *distmat)
 
 
 DISTMAT
-*get_scores(DISTMAT *distmat, char *listfile_name, int blast)
+*get_scores(DISTMAT *distmat, char *listfile_name, size_t blast)
 {
 	char                 scorefile_appendix[256];
 	char                 buff[200];
@@ -242,7 +241,7 @@ print_NX_distmat_file(DISTMAT *distmat, FILE* NXfile_ptr)
 
 	fprintf(NXfile_ptr, "#NEXUS\n\n");
 	fprintf(NXfile_ptr, "begin taxa;\n");
-	fprintf(NXfile_ptr, "  dimensions ntax=%d;\n", distmat->ntax);
+	fprintf(NXfile_ptr, "  dimensions ntax=%lu;\n", distmat->ntax);
 	fprintf(NXfile_ptr, "  taxlabels\n");
 
 	for (i = 0; i < distmat->ntax; ++i)

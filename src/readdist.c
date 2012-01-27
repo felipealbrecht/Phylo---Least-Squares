@@ -59,6 +59,11 @@ Example triagonal:
   \todo: cuidado com os memory leaks, principalmente depois de usar o get_text, deve-se liberar a memoria!
 */
 
+static value_pair_t value_pair_create(size_t taxon_1, size_t taxon_2, double value);
+static size_t value_pair_destroy(void *v);
+static size_t destroy_values(void *v);
+static char* get_from_expression(char *expr);
+
 #ifdef _DEBUG_READDIST_
 int main(int argc, char **argv)
 {
@@ -111,7 +116,7 @@ static inline int is_number(char *number)
 {
 	assert(number != NULL);
 
-	int len = strlen(number);
+	size_t len = strlen(number);
 	int i;
 	int dots = 0; /* To make the use of dots, Valid: 2.0 . Invalid: 2.6.2 */
 
@@ -135,8 +140,7 @@ static inline int is_number(char *number)
 	return 1;
 }
 
-
-value_pair_t value_pair_create(int taxon_1, int taxon_2, double value)
+static value_pair_t value_pair_create(size_t taxon_1, size_t taxon_2, double value)
 {
 	value_pair_t vp = (value_pair_t) malloc(sizeof(struct __value_pair));
 
@@ -149,7 +153,7 @@ value_pair_t value_pair_create(int taxon_1, int taxon_2, double value)
 	return vp;
 }
 
-int value_pair_destroy(void *v)
+static size_t value_pair_destroy(void *v)
 {
 	assert(v != NULL);
 	value_pair_t *value_pair = (value_pair_t *) v;
@@ -206,7 +210,7 @@ values_table_t values_table_create(size_t size)
 	return values_table;
 }
 
-int destroy_values(void *v)
+static size_t destroy_values(void *v)
 {
 	assert(v != NULL);
 	hash_table_t* value_table = (hash_table_t *) v;
@@ -237,7 +241,7 @@ void values_table_destroy(values_table_t *values_table)
 
 }
 
-unsigned int values_table_get_size(values_table_t values_table)
+size_t values_table_get_size(values_table_t values_table)
 {
 	assert(values_table != NULL);
 
@@ -246,9 +250,9 @@ unsigned int values_table_get_size(values_table_t values_table)
 
 /**
  * Return  0: Okay
- * Return -1: The pos alread in use
+ * Return  1: The pos alread in use
  */
-unsigned int values_table_add_name(values_table_t values_table, unsigned int pos, char *name)
+size_t values_table_add_name(values_table_t values_table, size_t pos, char *name)
 {
 	assert(values_table != NULL);
 	assert(name != NULL);
@@ -257,7 +261,7 @@ unsigned int values_table_add_name(values_table_t values_table, unsigned int pos
 	void* value = hash_table_get(values_table->names, pos_to_string);
 
 	if (value != NULL) {
-		return -1;
+		return 1;
 	} else {
 		hash_table_add(values_table->names, pos_to_string, (void *) name);
 		return 0;
@@ -279,7 +283,7 @@ iterator_t values_table_name_iterator(values_table_t values_table)
 	return iterator;
 }
 
-char *values_table_get_name(values_table_t values_table, unsigned int pos)
+char *values_table_get_name(values_table_t values_table, size_t pos)
 {
 	assert(values_table != NULL);
 
@@ -289,14 +293,14 @@ char *values_table_get_name(values_table_t values_table, unsigned int pos)
 	return name;
 }
 
-void* values_table_add_value(values_table_t values_table, unsigned int pos_1, unsigned int pos_2, double value)
+void* values_table_add_value(values_table_t values_table, size_t pos_1, size_t pos_2, double value)
 {
 	assert(values_table != NULL);
 
 	char *pos_bigger_to_string = NULL;
 	char *pos_smaller_to_string = NULL;
-	unsigned int max;
-	unsigned int min;
+	size_t max;
+	size_t min;
 
 	hash_table_t values = NULL;
 
@@ -322,8 +326,8 @@ void* values_table_add_value(values_table_t values_table, unsigned int pos_1, un
 }
 
 
-/**TODO: Fazer uma versao que ja receba strings como parematro! */
-double values_table_get_value(values_table_t values_table, unsigned int pos_1, unsigned int pos_2)
+/*TODO: Fazer uma versao que ja receba strings como parematro! */
+double values_table_get_value(values_table_t values_table, size_t pos_1, size_t pos_2)
 {
 	assert(values_table != NULL);
 
@@ -411,7 +415,7 @@ int check_text(char* text, char *expected, char *error_message)
 	assert(expected != NULL);
 
 	if (!(strcmp(text, expected) == 0)) {
-		fprintf(stderr, error_message);
+		fprintf(stderr, "%s", error_message);
 		return 0;
 	}
 
@@ -419,12 +423,12 @@ int check_text(char* text, char *expected, char *error_message)
 }
 
 
-char* get_from_expression(char *expr)
+static char* get_from_expression(char *expr)
 {
 	assert(expr != NULL);
 
 	char *number;
-	int i, len, initial = -1, final = -1;
+	size_t i, len, initial = -1, final = -1;
 
 	len = strlen(expr);
 
@@ -444,7 +448,7 @@ char* get_from_expression(char *expr)
 		}
 	}
 
-	int length = final - initial + 1;
+	size_t length = final - initial + 1;
 
 	number = malloc(sizeof(char) * length);
 	memset(number, '\0', sizeof(char) * length);
@@ -606,10 +610,10 @@ values_table_t read_dist_file_from_paup(char *file_name)
 void values_table_print(FILE *output, values_table_t values_table)
 {
 	unsigned int i, j;
-	unsigned int qtd_taxons = values_table_get_size(values_table);
+	size_t qtd_taxons = values_table_get_size(values_table);
 	char *name = NULL;
 
-	fprintf(output, "Taxons: %d\n", qtd_taxons);
+	fprintf(output, "Taxons: %lu\n", qtd_taxons);
 
 	for (i = 0; i < qtd_taxons; i++) {
 		name = values_table_get_name(values_table, i);

@@ -1,0 +1,297 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F0CE8BF714D304750095473A /* readdist.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF114D304750095473A /* readdist.c */; };
+		F0CE8BF814D304750095473A /* result_pair.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF214D304750095473A /* result_pair.c */; };
+		F0CE8BF914D304750095473A /* scop2dist.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF314D304750095473A /* scop2dist.c */; };
+		F0CE8BFA14D304750095473A /* tree_matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF414D304750095473A /* tree_matrix.c */; };
+		F0CE8BFB14D304750095473A /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF514D304750095473A /* tree.c */; };
+		F0CE8BFC14D304750095473A /* Makefile.old in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF614D304750095473A /* Makefile.old */; };
+		F0CE8C1414D306EB0095473A /* pih_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8C1314D306EB0095473A /* pih_lib.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F08B10A014D3037800114DF3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		F08B10A214D3037800114DF3 /* Phylo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Phylo; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0CE8BF114D304750095473A /* readdist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = readdist.c; path = src/readdist.c; sourceTree = SOURCE_ROOT; };
+		F0CE8BF214D304750095473A /* result_pair.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = result_pair.c; path = src/result_pair.c; sourceTree = SOURCE_ROOT; };
+		F0CE8BF314D304750095473A /* scop2dist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scop2dist.c; path = src/scop2dist.c; sourceTree = SOURCE_ROOT; };
+		F0CE8BF414D304750095473A /* tree_matrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree_matrix.c; path = src/tree_matrix.c; sourceTree = SOURCE_ROOT; };
+		F0CE8BF514D304750095473A /* tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree.c; path = src/tree.c; sourceTree = SOURCE_ROOT; };
+		F0CE8BF614D304750095473A /* Makefile.old */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.old; path = src/Makefile.old; sourceTree = SOURCE_ROOT; };
+		F0CE8BFE14D305450095473A /* readdist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = readdist.h; path = include/readdist.h; sourceTree = SOURCE_ROOT; };
+		F0CE8BFF14D305450095473A /* result_pair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = result_pair.h; path = include/result_pair.h; sourceTree = SOURCE_ROOT; };
+		F0CE8C0014D305450095473A /* scop2dist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scop2dist.h; path = include/scop2dist.h; sourceTree = SOURCE_ROOT; };
+		F0CE8C0114D305450095473A /* tree_matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tree_matrix.h; path = include/tree_matrix.h; sourceTree = SOURCE_ROOT; };
+		F0CE8C0214D305450095473A /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tree.h; path = include/tree.h; sourceTree = SOURCE_ROOT; };
+		F0CE8C0614D305620095473A /* 26_Ribonuclease_HI_COG0328 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 26_Ribonuclease_HI_COG0328; path = data/26_Ribonuclease_HI_COG0328; sourceTree = SOURCE_ROOT; };
+		F0CE8C0714D305620095473A /* 38_Ribonuclease_HII_COG0164 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 38_Ribonuclease_HII_COG0164; path = data/38_Ribonuclease_HII_COG0164; sourceTree = SOURCE_ROOT; };
+		F0CE8C0814D305620095473A /* 49_taxons */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 49_taxons; path = data/49_taxons; sourceTree = SOURCE_ROOT; };
+		F0CE8C0914D305620095473A /* domains.NX */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = domains.NX; path = data/domains.NX; sourceTree = SOURCE_ROOT; };
+		F0CE8C0A14D305620095473A /* infile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = infile; path = data/infile; sourceTree = SOURCE_ROOT; };
+		F0CE8C0B14D305620095473A /* more_complex_matrix */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = more_complex_matrix; path = data/more_complex_matrix; sourceTree = SOURCE_ROOT; };
+		F0CE8C0C14D305620095473A /* not_so_simple_matrix */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = not_so_simple_matrix; path = data/not_so_simple_matrix; sourceTree = SOURCE_ROOT; };
+		F0CE8C0D14D305620095473A /* really_simple_matrix */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = really_simple_matrix; path = data/really_simple_matrix; sourceTree = SOURCE_ROOT; };
+		F0CE8C0E14D305620095473A /* simple_matrix */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = simple_matrix; path = data/simple_matrix; sourceTree = SOURCE_ROOT; };
+		F0CE8C0F14D305620095473A /* tcc_matrix */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tcc_matrix; path = data/tcc_matrix; sourceTree = SOURCE_ROOT; };
+		F0CE8C1014D305620095473A /* testin */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = testin; path = data/testin; sourceTree = SOURCE_ROOT; };
+		F0CE8C1114D305620095473A /* very_simple_matrix */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = very_simple_matrix; path = data/very_simple_matrix; sourceTree = SOURCE_ROOT; };
+		F0CE8C1214D306E20095473A /* pih_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pih_lib.h; path = "../../Pih-Lib/include/pih_lib.h"; sourceTree = "<group>"; };
+		F0CE8C1314D306EB0095473A /* pih_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pih_lib.c; path = "../../Pih-Lib/src/pih_lib.c"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F08B109F14D3037800114DF3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F08B109714D3037700114DF3 = {
+			isa = PBXGroup;
+			children = (
+				F08B10A514D3037800114DF3 /* Phylo */,
+				F08B10A314D3037800114DF3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F08B10A314D3037800114DF3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F08B10A214D3037800114DF3 /* Phylo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F08B10A514D3037800114DF3 /* Phylo */ = {
+			isa = PBXGroup;
+			children = (
+				F0CE8C0514D305580095473A /* data */,
+				F0CE8C0414D305550095473A /* include */,
+				F0CE8C0314D305520095473A /* src */,
+			);
+			path = Phylo;
+			sourceTree = "<group>";
+		};
+		F0CE8C0314D305520095473A /* src */ = {
+			isa = PBXGroup;
+			children = (
+				F0CE8BF614D304750095473A /* Makefile.old */,
+				F0CE8C1314D306EB0095473A /* pih_lib.c */,
+				F0CE8BF114D304750095473A /* readdist.c */,
+				F0CE8BF214D304750095473A /* result_pair.c */,
+				F0CE8BF314D304750095473A /* scop2dist.c */,
+				F0CE8BF414D304750095473A /* tree_matrix.c */,
+				F0CE8BF514D304750095473A /* tree.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		F0CE8C0414D305550095473A /* include */ = {
+			isa = PBXGroup;
+			children = (
+				F0CE8C1214D306E20095473A /* pih_lib.h */,
+				F0CE8BFE14D305450095473A /* readdist.h */,
+				F0CE8BFF14D305450095473A /* result_pair.h */,
+				F0CE8C0014D305450095473A /* scop2dist.h */,
+				F0CE8C0114D305450095473A /* tree_matrix.h */,
+				F0CE8C0214D305450095473A /* tree.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		F0CE8C0514D305580095473A /* data */ = {
+			isa = PBXGroup;
+			children = (
+				F0CE8C0614D305620095473A /* 26_Ribonuclease_HI_COG0328 */,
+				F0CE8C0714D305620095473A /* 38_Ribonuclease_HII_COG0164 */,
+				F0CE8C0814D305620095473A /* 49_taxons */,
+				F0CE8C0914D305620095473A /* domains.NX */,
+				F0CE8C0A14D305620095473A /* infile */,
+				F0CE8C0B14D305620095473A /* more_complex_matrix */,
+				F0CE8C0C14D305620095473A /* not_so_simple_matrix */,
+				F0CE8C0D14D305620095473A /* really_simple_matrix */,
+				F0CE8C0E14D305620095473A /* simple_matrix */,
+				F0CE8C0F14D305620095473A /* tcc_matrix */,
+				F0CE8C1014D305620095473A /* testin */,
+				F0CE8C1114D305620095473A /* very_simple_matrix */,
+			);
+			name = data;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F08B10A114D3037800114DF3 /* Phylo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F08B10AC14D3037800114DF3 /* Build configuration list for PBXNativeTarget "Phylo" */;
+			buildPhases = (
+				F08B109E14D3037800114DF3 /* Sources */,
+				F08B109F14D3037800114DF3 /* Frameworks */,
+				F08B10A014D3037800114DF3 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Phylo;
+			productName = Phylo;
+			productReference = F08B10A214D3037800114DF3 /* Phylo */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F08B109914D3037700114DF3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = F08B109C14D3037700114DF3 /* Build configuration list for PBXProject "Phylo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F08B109714D3037700114DF3;
+			productRefGroup = F08B10A314D3037800114DF3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F08B10A114D3037800114DF3 /* Phylo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F08B109E14D3037800114DF3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0CE8BF714D304750095473A /* readdist.c in Sources */,
+				F0CE8BF814D304750095473A /* result_pair.c in Sources */,
+				F0CE8BF914D304750095473A /* scop2dist.c in Sources */,
+				F0CE8BFA14D304750095473A /* tree_matrix.c in Sources */,
+				F0CE8BFB14D304750095473A /* tree.c in Sources */,
+				F0CE8BFC14D304750095473A /* Makefile.old in Sources */,
+				F0CE8C1414D306EB0095473A /* pih_lib.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		F08B10AA14D3037800114DF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F08B10AB14D3037800114DF3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		F08B10AD14D3037800114DF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"_LS_RUN_=1",
+				);
+				New_Setting = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F08B10AE14D3037800114DF3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = "_LS_RUN_=1";
+				New_Setting = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F08B109C14D3037700114DF3 /* Build configuration list for PBXProject "Phylo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F08B10AA14D3037800114DF3 /* Debug */,
+				F08B10AB14D3037800114DF3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F08B10AC14D3037800114DF3 /* Build configuration list for PBXNativeTarget "Phylo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F08B10AD14D3037800114DF3 /* Debug */,
+				F08B10AE14D3037800114DF3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F08B109914D3037700114DF3 /* Project object */;
+}

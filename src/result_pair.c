@@ -33,6 +33,8 @@
 #include "pih_lib.h"
 #include "scop2dist.h"
 
+size_t get_pos(char *id, hash_table_t table_position, size_t *actual);
+
 // teste
 #ifdef _TEST_RP_
 int main()
@@ -260,7 +262,7 @@ result_pair_t result_pair_create(char *seq1, char *seq2, double value)
 	return rp;
 }
 
-int result_pair_destroy(void *data)
+size_t result_pair_destroy(void *data)
 {
 	result_pair_t *rp = (result_pair_t *) data;
 
@@ -297,9 +299,9 @@ void result_pair_print(char *id, void *data)
 	fprintf(stderr, "%s%s X %s : %10.2e\n", id, rp->sequence_1, rp->sequence_2, rp->value);
 }
 
-int get_pos(char *id, hash_table_t table_position, int *actual)
+size_t get_pos(char *id, hash_table_t table_position, size_t *actual)
 {
-	uint64_t pos = (uint64_t) hash_table_get(table_position, id);
+	size_t pos = (size_t) hash_table_get(table_position, id);
 
 	if (pos == 0) {
 		(*actual)++;
@@ -310,7 +312,7 @@ int get_pos(char *id, hash_table_t table_position, int *actual)
 	return pos -1;
 }
 
-int result_pair_hash_table_destroy(void *data)
+size_t result_pair_hash_table_destroy(void *data)
 {
     hash_table_t *hash_table = (hash_table_t*) data;
     size_t s = (*hash_table)->size;
@@ -326,7 +328,7 @@ DISTMAT *convert_to_distmat(hash_table_t result_table)
 	DISTMAT* distmat = NULL;
 	char *seq1 = NULL;
 	char *seq2 = NULL;
-	int actual_pos = 0;
+	size_t actual_pos = 0;
 	cell_t cell = NULL;
 	cell_t cell_inner = NULL;
 	hash_table_t table_position = hash_table_create();
@@ -341,7 +343,7 @@ DISTMAT *convert_to_distmat(hash_table_t result_table)
 
 	result_pair_t rp = NULL;
 
-	int pos, pos_inner;
+	size_t pos, pos_inner;
 
 	while (table_result_iterator->has_next(table_result_iterator)) {
 		cell = table_result_iterator->next(table_result_iterator);

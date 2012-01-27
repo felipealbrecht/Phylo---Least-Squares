@@ -107,10 +107,10 @@ char *create_tree_identifier(int actual_iteration, int tree_count);
 int tree_destroy(tree_t *tree);
 
 tree_item_t internal_node_create(tree_t tree, tree_item_t parent, double parent_distance);
-int internal_node_destroy(void *data);
+size_t internal_node_destroy(void *data);
 
 tree_item_t taxon_node_create(tree_t tree, tree_item_t parent, char *identifier, double parent_distance);
-int taxon_node_destroy(void *data);
+size_t taxon_node_destroy(void *data);
 
 
 list_t add_taxon_trees(values_table_t values_table, list_t tree_seeds);
@@ -151,5 +151,9 @@ double visit_neighbor(tree_t tree, internal_node_t neighbor, double acumuled_dis
 tree_t rearrange_distances(values_table_t values_table, tree_t tree);
 
 void print_tree_values(list_t trees);
+void print_tree(char *id, void* data);
+list_t trees_construct(values_table_t values_table, list_t trees);
+double** tree_create_matrix(tree_t tree, size_t *lines, size_t *columns);
+void tree_matrix_destroy(double ***matrix, size_t lines);
 
 #endif
