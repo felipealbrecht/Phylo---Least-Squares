@@ -132,7 +132,7 @@ double remove_max_and_calcule_new_max(list_t list, int max);
 
 void print_triple(char *id, void* data);
 
-inline char* create_internal_node_identifier(tree_t tree);
+char* create_internal_node_identifier(tree_t tree);
 
 double*	calcule_distances(double d_ab, double d_ac, double d_bc);
 

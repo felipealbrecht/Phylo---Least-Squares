@@ -761,7 +761,7 @@ static size_t tree_branch_destroy(tree_branch_t *tree_branch, tree_t tree)
 }
 
 
-inline char* create_internal_node_identifier(tree_t tree)
+char* create_internal_node_identifier(tree_t tree)
 {
 	char *id = (char *) malloc(sizeof(char) * MAX_NAME);
 
