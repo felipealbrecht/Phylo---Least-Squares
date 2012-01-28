@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F0B03BEE14D40492003772D7 /* scop2dist.c in Sources */ = {isa = PBXBuildFile; fileRef = F0B03BED14D40492003772D7 /* scop2dist.c */; };
 		F0CE8BF714D304750095473A /* readdist.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF114D304750095473A /* readdist.c */; };
 		F0CE8BF814D304750095473A /* result_pair.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF214D304750095473A /* result_pair.c */; };
-		F0CE8BF914D304750095473A /* scop2dist.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF314D304750095473A /* scop2dist.c */; };
 		F0CE8BFA14D304750095473A /* tree_matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF414D304750095473A /* tree_matrix.c */; };
 		F0CE8BFB14D304750095473A /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8BF514D304750095473A /* tree.c */; };
 		F0CE8C1414D306EB0095473A /* pih_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = F0CE8C1314D306EB0095473A /* pih_lib.c */; };
@@ -29,14 +29,14 @@
 
 /* Begin PBXFileReference section */
 		F08B10A214D3037800114DF3 /* Phylo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Phylo; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0B03BEC14D40488003772D7 /* scop2dist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scop2dist.h; path = include/scop2dist.h; sourceTree = SOURCE_ROOT; };
+		F0B03BED14D40492003772D7 /* scop2dist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scop2dist.c; path = src/scop2dist.c; sourceTree = SOURCE_ROOT; };
 		F0CE8BF114D304750095473A /* readdist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = readdist.c; path = src/readdist.c; sourceTree = SOURCE_ROOT; };
 		F0CE8BF214D304750095473A /* result_pair.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = result_pair.c; path = src/result_pair.c; sourceTree = SOURCE_ROOT; };
-		F0CE8BF314D304750095473A /* scop2dist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scop2dist.c; path = src/scop2dist.c; sourceTree = SOURCE_ROOT; };
 		F0CE8BF414D304750095473A /* tree_matrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree_matrix.c; path = src/tree_matrix.c; sourceTree = SOURCE_ROOT; };
 		F0CE8BF514D304750095473A /* tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree.c; path = src/tree.c; sourceTree = SOURCE_ROOT; };
 		F0CE8BFE14D305450095473A /* readdist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = readdist.h; path = include/readdist.h; sourceTree = SOURCE_ROOT; };
 		F0CE8BFF14D305450095473A /* result_pair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = result_pair.h; path = include/result_pair.h; sourceTree = SOURCE_ROOT; };
-		F0CE8C0014D305450095473A /* scop2dist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scop2dist.h; path = include/scop2dist.h; sourceTree = SOURCE_ROOT; };
 		F0CE8C0114D305450095473A /* tree_matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tree_matrix.h; path = include/tree_matrix.h; sourceTree = SOURCE_ROOT; };
 		F0CE8C0214D305450095473A /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tree.h; path = include/tree.h; sourceTree = SOURCE_ROOT; };
 		F0CE8C0614D305620095473A /* 26_Ribonuclease_HI_COG0328 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 26_Ribonuclease_HI_COG0328; path = data/26_Ribonuclease_HI_COG0328; sourceTree = SOURCE_ROOT; };
@@ -95,10 +95,10 @@
 		F0CE8C0314D305520095473A /* src */ = {
 			isa = PBXGroup;
 			children = (
+				F0B03BED14D40492003772D7 /* scop2dist.c */,
 				F0CE8C1314D306EB0095473A /* pih_lib.c */,
 				F0CE8BF114D304750095473A /* readdist.c */,
 				F0CE8BF214D304750095473A /* result_pair.c */,
-				F0CE8BF314D304750095473A /* scop2dist.c */,
 				F0CE8BF414D304750095473A /* tree_matrix.c */,
 				F0CE8BF514D304750095473A /* tree.c */,
 			);
@@ -108,10 +108,10 @@
 		F0CE8C0414D305550095473A /* include */ = {
 			isa = PBXGroup;
 			children = (
+				F0B03BEC14D40488003772D7 /* scop2dist.h */,
 				F0CE8C1214D306E20095473A /* pih_lib.h */,
 				F0CE8BFE14D305450095473A /* readdist.h */,
 				F0CE8BFF14D305450095473A /* result_pair.h */,
-				F0CE8C0014D305450095473A /* scop2dist.h */,
 				F0CE8C0114D305450095473A /* tree_matrix.h */,
 				F0CE8C0214D305450095473A /* tree.h */,
 			);
@@ -189,10 +189,10 @@
 			files = (
 				F0CE8BF714D304750095473A /* readdist.c in Sources */,
 				F0CE8BF814D304750095473A /* result_pair.c in Sources */,
-				F0CE8BF914D304750095473A /* scop2dist.c in Sources */,
 				F0CE8BFA14D304750095473A /* tree_matrix.c in Sources */,
 				F0CE8BFB14D304750095473A /* tree.c in Sources */,
 				F0CE8C1414D306EB0095473A /* pih_lib.c in Sources */,
+				F0B03BEE14D40492003772D7 /* scop2dist.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

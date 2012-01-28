@@ -35,15 +35,11 @@ typedef struct
 }
 DISTMAT;
 
-DISTMAT *get_distmat(char *listfile_name, int blast);
-
 size_t get_ntax(char *listfile_name);
 
 DISTMAT *DISTMATalloc(size_t ntax);
 
 void DISTMATdestroy(DISTMAT *distmat);
-
-DISTMAT *get_scores(DISTMAT *distmat, char *listfile_name, size_t blast);
 
 void print_NX_distmat(DISTMAT *distmat, char *NXfile_name);
 

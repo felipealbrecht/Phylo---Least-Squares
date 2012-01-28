@@ -116,7 +116,6 @@ static tree_item_t tree_item_create(tree_t tree, tree_item_t parent, node_type_t
 {
 	assert(item != NULL);
 
-	char *id = NULL;
 	tree_item_t tree_item = (tree_item_t) malloc(sizeof( struct __tree_item));
 	assert(tree_item != NULL);
 	memset(tree_item, '\0', sizeof(struct __tree_item));
@@ -130,19 +129,16 @@ static tree_item_t tree_item_create(tree_t tree, tree_item_t parent, node_type_t
 		case LEAF: 	{
 			tree_item->item.taxon_node = item;
 			((taxon_node_t) item )->self = tree_item;
-			id = ((taxon_node_t) item )->taxon;
 			break;
 		}
 		case INTERNAL_NODE:	{
 			tree_item->item.internal_node = item;
 			((internal_node_t) item )->self = tree_item;
-			id = ((internal_node_t) item )->id;
 			break;
 		}
 		case TREE: {
 			tree_item->item.tree = item;
 			((tree_t) item )->self = tree_item;
-			id = ((tree_t) item )->id;
 			break;
 		}
 
@@ -1353,7 +1349,9 @@ list_t trees_construct(values_table_t values_table, list_t trees)
 #ifdef _LS_RUN_
 int main()
 {
-        values_table_t values_table = read_dist_file_from_phylip("../data/really_simple_matrix");
+
+    values_table_t values_table = read_dist_file_from_phylip("/Users/albrecht/development/Phylo---Least-Squares/data/really_simple_matrix");
+    //values_table_t values_table = read_dist_file_from_phylip("../data/really_simple_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/tcc_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/simple_matrix");
         //values_table_t values_table = read_dist_file_from_phylip("../data/not_so_simple_matrix");
