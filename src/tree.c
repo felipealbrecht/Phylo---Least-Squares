@@ -986,13 +986,13 @@ list_t filter_triples(list_t* list, unsigned int saved)
 		list_push(remains_triples, triple->taxon_a, triple);
 	}
 
-        while(iterator->has_next(iterator)) {
-            cell = iterator->next(iterator);
-            triple = cell->data;
-            triple_destroy(&triple);
-        }
+    while(iterator->has_next(iterator)) {
+         cell = iterator->next(iterator);
+         triple = cell->data;
+         triple_destroy(&triple);
+    }
 
-        list_destroy(list);
+    list_destroy(list);
 	list_iterator_destroy(&iterator);
 
 	return remains_triples;
@@ -1349,7 +1349,6 @@ list_t trees_construct(values_table_t values_table, list_t trees)
 #ifdef _LS_RUN_
 int main()
 {
-
     values_table_t values_table = read_dist_file_from_phylip("/Users/albrecht/development/Phylo---Least-Squares/data/really_simple_matrix");
     //values_table_t values_table = read_dist_file_from_phylip("../data/really_simple_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/tcc_matrix");
@@ -1359,9 +1358,9 @@ int main()
 	//values_table_t values_table = read_dist_file_from_phylip("../data/49_taxons");
 	//values_table_t values_table = read_dist_file_from_paup("../data/domains.NX");
 
-        values_table_print(stderr, values_table);
+    values_table_print(stderr, values_table);
 
-        list_t triples = create_triples(values_table);
+    list_t triples = create_triples(values_table);
 	fprintf(stderr, "There was created %ld triples... ", triples->size);
 	list_t continuing_triples = filter_triples(&triples, 1);
 	fprintf(stderr, "keep running %ld triples.\n", continuing_triples->size);
