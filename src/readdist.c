@@ -620,7 +620,7 @@ void values_table_print(FILE *output, values_table_t values_table)
 		fprintf(output, "%-10s", (char *) name);
 
 		for (j = 0; j < qtd_taxons; j++) {
-			fprintf(output, "%.3f ", values_table_get_value(values_table, i, j));
+			fprintf(output, "%.3F ", values_table_get_value(values_table, i, j));
 		}
 		fprintf(output, "\n");
 	}

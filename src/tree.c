@@ -463,13 +463,8 @@ tree_t tree_clone(tree_t tree, tree_item_t self_clone)
 	tree_clone->item_c = NULL;
 
 	tree_clone->item_a = tree_item_clone(tree->item_a, tree_clone->self, tree_clone);
-        //tree_clone->branch_a = tree_branch_create(tree_clone->self, tree_clone->item_a, tree_clone);
-
 	tree_clone->item_b = tree_item_clone(tree->item_b, tree_clone->self, tree_clone);
-	//tree_clone->branch_b = tree_branch_create(tree_clone->self, tree_clone->item_b, tree_clone);
-
 	tree_clone->item_c = tree_item_clone(tree->item_c, tree_clone->self, tree_clone);
-	//tree_clone->branch_c = tree_branch_create(tree_clone->self, tree_clone->item_c, tree_clone);
 
 	global_iteration_tree_count++;
 
@@ -1348,7 +1343,7 @@ list_t trees_construct(values_table_t values_table, list_t trees)
 
 #ifdef _LS_RUN_
 int main()
-{
+{   
     values_table_t values_table = read_dist_file_from_phylip("/Users/albrecht/development/Phylo---Least-Squares/data/really_simple_matrix");
     //values_table_t values_table = read_dist_file_from_phylip("../data/really_simple_matrix");
 	//values_table_t values_table = read_dist_file_from_phylip("../data/tcc_matrix");
@@ -1373,22 +1368,21 @@ int main()
 
 	print_tree_values(trees);
 
-        tree_t tree;
+    tree_t tree;
 	cell_t cell_tree;
 	iterator_t trees_iterator = list_iterator(trees);
 	while (trees_iterator->has_next(trees_iterator)) {
 		cell_tree = trees_iterator->next(trees_iterator);
 		tree = (tree_t) cell_tree->data;
-	        char *result = print_reprtree(values_table, tree);
-	        fprintf(stderr, "%s", result);
-                free(result);
+        char *result = print_reprtree(values_table, tree);
+	    fprintf(stderr, "%s", result);
+        free(result);
 		tree_destroy(&tree);
 	}
 
 	list_destroy(&trees);
 	list_iterator_destroy(&trees_iterator);
-        values_table_destroy(&values_table);
-
+    values_table_destroy(&values_table);
 
 	return 0;
 }

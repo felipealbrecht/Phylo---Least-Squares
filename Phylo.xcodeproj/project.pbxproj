@@ -252,6 +252,7 @@
 					"$(inherited)",
 					"_LS_RUN_=1",
 				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				New_Setting = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -261,6 +262,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = "_LS_RUN_=1";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				New_Setting = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
